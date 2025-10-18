@@ -9,7 +9,8 @@ import "@rainbow-me/rainbowkit/styles.css";
 
 const config = getDefaultConfig({
   appName: "Wallet Guardian",
-  projectId: "YOUR_PROJECT_ID",
+  projectId:
+    process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "test-project-id",
   chains: [mainnet],
 });
 
