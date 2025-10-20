@@ -3,6 +3,7 @@
 import { useAccount } from "wagmi";
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
@@ -17,6 +18,7 @@ import {
   Clock,
   ExternalLink,
 } from "lucide-react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 interface TokenBalance {
   token: {
@@ -258,6 +260,35 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white p-4 md:p-8">
       <div className="max-w-7xl mx-auto">
+        {/* Navbar */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-md bg-gradient-to-br from-purple-600 to-blue-400 flex items-center justify-center">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 1L3 5V11C3 17 7 22 12 23C17 22 21 17 21 11V5L12 1Z"
+                  stroke="white"
+                  strokeWidth="1.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <Link href="/" className="font-semibold text-lg">
+              WalletGuard
+            </Link>
+          </div>
+
+          <div>
+            <ConnectButton />
+          </div>
+        </div>
         {/* Header Stats */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
