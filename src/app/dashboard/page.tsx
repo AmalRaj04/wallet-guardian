@@ -19,6 +19,13 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { ethers } from "ethers";
+import {
+  scanAllowances,
+  calculateAllowanceRiskScore,
+  type TokenAllowance,
+} from "@/lib/allowances";
+import { getTokenPrice } from "@/lib/prices";
 
 interface TokenBalance {
   token: {
@@ -60,8 +67,9 @@ interface WalletData {
   tokenBalances: TokenBalance[];
   transactions: Transaction[];
   nfts: NFT[];
-  approvals: number;
+  approvals: TokenAllowance[];
   riskScore: string;
+  riskWarnings: string[];
 }
 
 export default function Dashboard() {
@@ -74,7 +82,6 @@ export default function Dashboard() {
   );
   const [ethPrice, setEthPrice] = useState(2500); // Default ETH price
   const [mounted, setMounted] = useState(false);
-  const [randomValuesSet, setRandomValuesSet] = useState(false);
 
   // Get Blockscout API URL based on chain
   const getBlockscoutUrl = useCallback(() => {
@@ -134,35 +141,70 @@ export default function Dashboard() {
         );
         const nftData = await nftResponse.json();
 
-        // Calculate total value
+        // Calculate total value with real token prices
         const ethBalance = parseFloat(addressData.coin_balance || "0") / 1e18;
         let totalValue = ethBalance * currentEthPrice;
 
-        // Add token values (simplified - in production, fetch real prices)
+        // Fetch real token prices and calculate total value
         const tokenBalances = tokensData || [];
-        tokenBalances.forEach((token: TokenBalance) => {
-          const balance =
-            parseFloat(token.value) /
-            Math.pow(10, parseInt(token.token.decimals));
-          // For demo purposes, we'll assign approximate values based on token symbols
-          if (token.token.symbol === "USDC" || token.token.symbol === "USDT") {
-            totalValue += balance;
-          } else if (token.token.symbol === "UNI") {
-            totalValue += balance * 5; // Approximate UNI price
+        for (const token of tokenBalances) {
+          // Defensive checks: ensure token structure exists
+          const tokenAddress = token?.token?.address;
+          const tokenDecimals = token?.token?.decimals || "18";
+          if (!tokenAddress) {
+            // skip tokens without a valid contract address
+            continue;
           }
-        });
 
-        // Mock weekly change (in production, calculate from historical data)
-        // Use deterministic placeholders for SSR, client will update after mount
-        const weeklyChange = 0; // Will be set client-side
+          const balance =
+            parseFloat(token.value) / Math.pow(10, parseInt(tokenDecimals));
 
-        // Count approvals (simplified)
-        // Use deterministic placeholder for SSR, client will update after mount
-        const approvals = 5; // Will be set client-side
+          // Fetch real price from CoinGecko
+          const priceData = await getTokenPrice(tokenAddress, chain?.id || 1);
+          if (priceData && typeof priceData.usd === "number") {
+            totalValue += balance * priceData.usd;
+          }
+        }
 
-        // Calculate risk score
-        const riskScore =
-          approvals > 10 ? "Medium" : approvals > 5 ? "Low" : "Very Low";
+        // Calculate weekly change from historical data (for now, use price change as proxy)
+        const weeklyChange = 0; // TODO: implement portfolio history tracking
+
+        // Scan real on-chain allowances
+        let allowances: TokenAllowance[] = [];
+        let riskScore = "Very Low";
+        let riskWarnings: string[] = [];
+
+        try {
+          // Get provider from wagmi
+          const ethereum = (window as { ethereum?: ethers.Eip1193Provider })
+            .ethereum;
+          if (!ethereum) throw new Error("No ethereum provider");
+          const provider = new ethers.BrowserProvider(ethereum);
+
+          // Prepare token list for allowance scanning
+          const tokensForScan = tokenBalances.map((t: TokenBalance) => ({
+            address: t.token.address,
+            name: t.token.name,
+            symbol: t.token.symbol,
+            decimals: parseInt(t.token.decimals),
+          }));
+
+          // Scan allowances
+          allowances = await scanAllowances(
+            provider,
+            walletAddress,
+            tokensForScan,
+            chain?.id || 1
+          );
+
+          // Calculate risk score
+          const riskData = calculateAllowanceRiskScore(allowances);
+          riskScore = riskData.level;
+          riskWarnings = riskData.warnings;
+        } catch (error) {
+          console.error("Failed to scan allowances:", error);
+          // Continue with empty allowances if scanning fails
+        }
 
         setWalletData({
           totalValue,
@@ -170,8 +212,9 @@ export default function Dashboard() {
           tokenBalances: tokenBalances.slice(0, 10),
           transactions: txData.items?.slice(0, 10) || [],
           nfts: nftData.items?.slice(0, 20) || [],
-          approvals,
+          approvals: allowances,
           riskScore,
+          riskWarnings,
         });
       } catch (error) {
         console.error("Error fetching wallet data:", error);
@@ -179,7 +222,7 @@ export default function Dashboard() {
         setLoading(false);
       }
     },
-    [getBlockscoutUrl]
+    [getBlockscoutUrl, chain?.id]
   );
 
   useEffect(() => {
@@ -199,21 +242,7 @@ export default function Dashboard() {
     setMounted(true);
   }, []);
 
-  // Client-only effect to set random demo values after mount
-  // This prevents SSR/CSR mismatch while still showing dynamic demo data
-  useEffect(() => {
-    if (mounted && walletData && !randomValuesSet) {
-      setWalletData((prev) => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          weeklyChange: (Math.random() - 0.3) * 10,
-          approvals: Math.floor(Math.random() * 12) + 3,
-        };
-      });
-      setRandomValuesSet(true);
-    }
-  }, [mounted, walletData, randomValuesSet]); // Include all dependencies
+  // Removed client-only random values - now using real data from allowance scanner
 
   // During SSR the component should render the same HTML as initial client
   // to avoid hydration mismatch. We show the same deterministic loading
@@ -252,10 +281,8 @@ export default function Dashboard() {
     );
   }
 
-  const approvalWarnings =
-    walletData?.approvals && walletData.approvals > 5
-      ? walletData.approvals - 5
-      : 0;
+  const approvalCount = walletData?.approvals?.length || 0;
+  const approvalWarnings = walletData?.riskWarnings?.length || 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white p-4 md:p-8">
@@ -328,11 +355,10 @@ export default function Dashboard() {
               <span className="text-gray-400 text-sm">Active Approvals</span>
               <AlertTriangle className="w-5 h-5 text-orange-400" />
             </div>
-            <div className="text-3xl font-bold mb-1">
-              {walletData?.approvals}
-            </div>
+            <div className="text-3xl font-bold mb-1">{approvalCount}</div>
             <div className="text-sm text-orange-400">
-              {approvalWarnings} require review
+              {approvalWarnings}{" "}
+              {approvalWarnings === 1 ? "warning" : "warnings"}
             </div>
           </div>
 
@@ -529,30 +555,58 @@ export default function Dashboard() {
                 Active token approvals allow contracts to spend your tokens.
                 Review regularly.
               </div>
-              {[...Array(walletData?.approvals || 0)].map((_, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex items-center justify-between p-4 bg-slate-900/30 rounded-xl"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-orange-500/20 rounded-full flex items-center justify-center">
-                      <CheckCircle className="w-5 h-5 text-orange-400" />
-                    </div>
-                    <div>
-                      <div className="font-semibold">Contract {index + 1}</div>
-                      <div className="text-sm text-gray-400">
-                        Unlimited approval
+              {walletData?.approvals && walletData.approvals.length > 0 ? (
+                walletData.approvals.map((approval, index) => (
+                  <motion.div
+                    key={`${approval.tokenAddress}-${approval.spender}`}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="flex items-center justify-between p-4 bg-slate-900/30 rounded-xl"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          approval.isUnlimited
+                            ? "bg-red-500/20"
+                            : "bg-orange-500/20"
+                        }`}
+                      >
+                        <CheckCircle
+                          className={`w-5 h-5 ${
+                            approval.isUnlimited
+                              ? "text-red-400"
+                              : "text-orange-400"
+                          }`}
+                        />
+                      </div>
+                      <div>
+                        <div className="font-semibold">
+                          {approval.tokenSymbol} → {approval.spenderInfo.name}
+                        </div>
+                        <div className="text-sm text-gray-400">
+                          {approval.isUnlimited
+                            ? "Unlimited"
+                            : approval.allowanceFormatted}
+                          {approval.usdValue &&
+                            approval.usdValue !== Infinity && (
+                              <span className="ml-2">
+                                (${approval.usdValue.toFixed(2)})
+                              </span>
+                            )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <button className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all text-sm">
-                    Revoke
-                  </button>
-                </motion.div>
-              ))}
+                    <button className="px-4 py-2 bg-red-500/20 text-red-400 rounded-lg hover:bg-red-500/30 transition-all text-sm">
+                      Revoke
+                    </button>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-400">
+                  No active approvals found. Your tokens are safe!
+                </div>
+              )}
             </div>
           )}
         </motion.div>
