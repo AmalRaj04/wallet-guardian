@@ -39,8 +39,8 @@ interface Transaction {
   } | null;
   value: string;
   timestamp: string;
-  status: string;
-  method: string;
+  result: string;
+  method?: string;
 }
 
 interface NFT {
@@ -72,6 +72,7 @@ export default function Dashboard() {
   );
   const [ethPrice, setEthPrice] = useState(2500); // Default ETH price
   const [mounted, setMounted] = useState(false);
+  const [randomValuesSet, setRandomValuesSet] = useState(false);
 
   // Get Blockscout API URL based on chain
   const getBlockscoutUrl = useCallback(() => {
@@ -121,7 +122,7 @@ export default function Dashboard() {
 
         // Fetch recent transactions
         const txResponse = await fetch(
-          `${blockscoutUrl}/addresses/${walletAddress}/transactions?filter=to%20%7C%20from`
+          `${blockscoutUrl}/addresses/${walletAddress}/transactions`
         );
         const txData = await txResponse.json();
 
@@ -150,10 +151,12 @@ export default function Dashboard() {
         });
 
         // Mock weekly change (in production, calculate from historical data)
-        const weeklyChange = (Math.random() - 0.3) * 10;
+        // Use deterministic placeholders for SSR, client will update after mount
+        const weeklyChange = 0; // Will be set client-side
 
         // Count approvals (simplified)
-        const approvals = Math.floor(Math.random() * 12) + 3;
+        // Use deterministic placeholder for SSR, client will update after mount
+        const approvals = 5; // Will be set client-side
 
         // Calculate risk score
         const riskScore =
@@ -193,6 +196,22 @@ export default function Dashboard() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Client-only effect to set random demo values after mount
+  // This prevents SSR/CSR mismatch while still showing dynamic demo data
+  useEffect(() => {
+    if (mounted && walletData && !randomValuesSet) {
+      setWalletData((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          weeklyChange: (Math.random() - 0.3) * 10,
+          approvals: Math.floor(Math.random() * 12) + 3,
+        };
+      });
+      setRandomValuesSet(true);
+    }
+  }, [mounted, walletData, randomValuesSet]); // Include all dependencies
 
   // During SSR the component should render the same HTML as initial client
   // to avoid hydration mismatch. We show the same deterministic loading
@@ -358,16 +377,20 @@ export default function Dashboard() {
                   let usdValue = 0;
                   let changePercent = 0;
 
-                  // Mock values for demo
+                  // Simplified token pricing - in production use real-time price APIs
                   if (symbol === "USDC" || symbol === "USDT") {
                     usdValue = balance;
-                    changePercent = 0;
+                    changePercent = (Math.random() - 0.5) * 2; // Small random change for stablecoins
+                  } else if (symbol === "LINK") {
+                    usdValue = balance * 15; // Approximate LINK price
+                    changePercent = (Math.random() - 0.5) * 20;
                   } else if (symbol === "UNI") {
-                    usdValue = balance * 5;
-                    changePercent = 12.4;
+                    usdValue = balance * 8; // Approximate UNI price
+                    changePercent = (Math.random() - 0.5) * 15;
                   } else {
-                    usdValue = balance * 0.5;
-                    changePercent = -5.2;
+                    // For unknown tokens, show balance without USD value
+                    usdValue = 0;
+                    changePercent = 0;
                   }
 
                   return (
@@ -391,11 +414,12 @@ export default function Dashboard() {
                       </div>
                       <div className="text-right">
                         <div className="font-semibold">
-                          $
-                          {usdValue.toLocaleString(undefined, {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                          })}
+                          {usdValue > 0
+                            ? `$${usdValue.toLocaleString(undefined, {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                              })}`
+                            : `${balance.toFixed(4)} ${symbol}`}
                         </div>
                         <div
                           className={`text-sm ${
@@ -404,8 +428,16 @@ export default function Dashboard() {
                               : "text-red-400"
                           }`}
                         >
-                          {changePercent >= 0 ? "+" : ""}
-                          {changePercent.toFixed(1)}%
+                          {usdValue > 0 ? (
+                            <>
+                              {changePercent >= 0 ? "+" : ""}
+                              {changePercent.toFixed(1)}%
+                            </>
+                          ) : (
+                            <span className="text-gray-400">
+                              Price unavailable
+                            </span>
+                          )}
                         </div>
                       </div>
                     </motion.div>
@@ -571,7 +603,7 @@ export default function Dashboard() {
                       </div>
                       <div
                         className={`text-sm ${
-                          tx.status === "ok"
+                          tx.result === "success"
                             ? "text-green-400"
                             : "text-orange-400"
                         }`}
