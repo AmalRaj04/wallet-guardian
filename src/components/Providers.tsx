@@ -3,7 +3,7 @@
 import React from "react";
 import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { mainnet } from "wagmi/chains";
+import { mainnet, sepolia } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import "@rainbow-me/rainbowkit/styles.css";
 
@@ -11,7 +11,7 @@ const config = getDefaultConfig({
   appName: "Wallet Guardian",
   projectId:
     process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "test-project-id",
-  chains: [mainnet],
+  chains: [mainnet, sepolia],
 });
 
 const queryClient = new QueryClient();
