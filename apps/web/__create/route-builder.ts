@@ -1,6 +1,6 @@
 import { readdir, stat } from 'node:fs/promises';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Hono } from 'hono';
 import type { Handler } from 'hono/types';
 import updatedFetch from '../src/__create/fetch';
@@ -26,7 +26,7 @@ async function findRouteFiles(dir: string): Promise<string[]> {
 
       if (statResult.isDirectory()) {
         routes = routes.concat(await findRouteFiles(filePath));
-      } else if (file === 'route.js') {
+      } else if (/^route\.(js|ts|tsx|jsx)$/.test(file)) {
         // Handle root route.js specially
         if (filePath === join(__dirname, 'route.js')) {
           routes.unshift(filePath); // Add to beginning of array
@@ -81,7 +81,10 @@ async function registerRoutes() {
 
   for (const routeFile of routeFiles) {
     try {
-      const route = await import(/* @vite-ignore */ `${routeFile}?update=${Date.now()}`);
+  // Use a file:// URL to ensure the dynamic import resolver works
+  // correctly on Windows and with Vite's SSR module runner.
+  const routeUrl = `${pathToFileURL(routeFile).href}?update=${Date.now()}`;
+  const route = await import(/* @vite-ignore */ routeUrl);
 
       const methods = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
       for (const method of methods) {
@@ -92,9 +95,8 @@ async function registerRoutes() {
             const handler: Handler = async (c) => {
               const params = c.req.param();
               if (import.meta.env.DEV) {
-                const updatedRoute = await import(
-                  /* @vite-ignore */ `${routeFile}?update=${Date.now()}`
-                );
+                const updatedRouteUrl = `${pathToFileURL(routeFile).href}?update=${Date.now()}`;
+                const updatedRoute = await import(/* @vite-ignore */ updatedRouteUrl);
                 return await updatedRoute[method](c.req.raw, { params });
               }
               return await route[method](c.req.raw, { params });

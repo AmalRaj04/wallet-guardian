@@ -4,7 +4,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "react-router dev",
-		"typecheck": "react-router typegen && tsc --noEmit"
+		"pretypegen": "node ./scripts/copy-shims.cjs",
+		"typecheck": "npm run pretypegen && react-router typegen && tsc --noEmit"
 	},
 	"dependencies": {
 		"@auth/core": "^0.37.2",

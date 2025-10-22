@@ -12,7 +12,10 @@ const safeStringify = (value: unknown) =>
 const postToParent = (level: string, text: string, extra: unknown) => {
   try {
     if (isBackend() || !window.parent || window.parent === window) {
-      ('level' in console ? console[level] : console.log)(text, extra);
+      // `console[level]` is intentionally dynamic (level is 'log'|'error' etc.).
+      // Cast to any to satisfy TypeScript's index signature checks.
+      const c: any = console;
+      (('level' in console ? c[level] : console.log) as any)(text, extra);
       return;
     }
     window.parent.postMessage(
