@@ -34,7 +34,7 @@ const UNLIMITED_THRESHOLD = MAX_UINT256 / BigInt(2); // Consider > 50% of max as
  * Scan ERC-20 allowances for a wallet
  */
 export async function scanAllowances(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   ownerAddress: string,
   tokens: Array<{
     address: string;
@@ -97,7 +97,7 @@ export async function scanAllowances(
         const isUnlimited = allowance >= UNLIMITED_THRESHOLD;
         const formatted = isUnlimited
           ? "Unlimited"
-          : ethers.formatUnits(allowance, metadata.tokenDecimals);
+          : ethers.utils.formatUnits(allowance, metadata.tokenDecimals);
 
         allowances.push({
           tokenAddress: metadata.tokenAddress,
@@ -136,7 +136,7 @@ async function enrichWithUsdValues(
       const price = await getTokenPrice(allowance.tokenAddress, chainId);
       if (price && !allowance.isUnlimited) {
         const amount = Number(
-          ethers.formatUnits(allowance.allowance, allowance.tokenDecimals)
+          ethers.utils.formatUnits(allowance.allowance, allowance.tokenDecimals)
         );
         allowance.usdValue = amount * price.usd;
       } else if (allowance.isUnlimited) {

@@ -51,8 +51,8 @@ export interface Portfolio {
 
 export interface Alert {
   id: string;
-  type: 'price_drop' | 'volume_spike' | 'security_risk' | 'mempool_threat';
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: "price_drop" | "volume_spike" | "security_risk" | "mempool_threat";
+  severity: "low" | "medium" | "high" | "critical";
   token?: Token;
   title: string;
   message: string;
@@ -66,14 +66,22 @@ export interface Alert {
 export interface AlertAction {
   id: string;
   label: string;
-  type: 'sell' | 'convert' | 'revoke' | 'ignore';
+  type: "sell" | "convert" | "revoke" | "ignore";
   data?: any;
 }
 
 export interface AIResponse {
-  context: 'coin' | 'portfolio' | 'security';
+  context: "coin" | "portfolio" | "security";
   summary: string;
-  recommendation?: 'buy' | 'hold' | 'sell' | 'convert' | 'revoke' | 'reduce_risk' | 'take_profits' | 'monitor';
+  recommendation?:
+    | "buy"
+    | "hold"
+    | "sell"
+    | "convert"
+    | "revoke"
+    | "reduce_risk"
+    | "take_profits"
+    | "monitor";
   score?: number; // 0-100 or 1-10
   reason: string;
   confidence?: number;
@@ -82,8 +90,13 @@ export interface AIResponse {
 
 export interface SecurityRisk {
   id: string;
-  type: 'unverified_contract' | 'high_allowance' | 'honeypot' | 'malicious_code' | 'mempool_threat';
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  type:
+    | "unverified_contract"
+    | "high_allowance"
+    | "honeypot"
+    | "malicious_code"
+    | "mempool_threat";
+  severity: "low" | "medium" | "high" | "critical";
   contractAddress?: string;
   tokenAddress?: string;
   description: string;
@@ -100,7 +113,7 @@ export interface TokenAllowance {
   allowanceFormatted: number;
   isUnlimited: boolean;
   lastUpdated: Date;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
+  riskLevel: "low" | "medium" | "high" | "critical";
 }
 
 export interface WalletRiskScore {
@@ -124,8 +137,8 @@ export interface MempoolTransaction {
   gasLimit: string;
   data: string;
   timestamp: Date;
-  riskLevel: 'low' | 'medium' | 'high';
-  threatType?: 'frontrun' | 'sandwich' | 'mev' | 'suspicious';
+  riskLevel: "low" | "medium" | "high";
+  threatType?: "frontrun" | "sandwich" | "mev" | "suspicious";
 }
 
 export interface TrendingCoin {
@@ -144,15 +157,17 @@ export interface TrendingCoin {
   };
 }
 
-export interface CoinDetails extends Coin {
+export interface CoinDetails extends Omit<Coin, "image"> {
   description?: {
     en: string;
   };
-  image?: {
-    thumb: string;
-    small: string;
-    large: string;
-  };
+  image?:
+    | {
+        thumb: string;
+        small: string;
+        large: string;
+      }
+    | string;
   links?: {
     homepage: string[];
     blockchain_site: string[];
@@ -230,8 +245,8 @@ export interface SwapQuote {
 }
 
 export interface ThemeConfig {
-  mode: 'light' | 'dark';
-  accentColor: 'blue' | 'purple' | 'pink' | 'green';
+  mode: "light" | "dark";
+  accentColor: "blue" | "purple" | "pink" | "green";
 }
 
 export interface AppState {
@@ -266,7 +281,7 @@ export interface EnvioResponse<T> {
 export interface GlassCardProps {
   children: React.ReactNode;
   className?: string;
-  neonColor?: 'blue' | 'purple' | 'pink' | 'green';
+  neonColor?: "blue" | "purple" | "pink" | "green";
   onClick?: () => void;
 }
 

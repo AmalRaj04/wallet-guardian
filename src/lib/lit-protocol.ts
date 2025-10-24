@@ -1,7 +1,9 @@
-// Lit Protocol Integration for Conditional Signing
+// Lit Protocol Integration for Conditional Signing & PKP Management
 import * as LitJsSdk from "@lit-protocol/lit-node-client";
+import { ethers } from "ethers";
 
 const LIT_NETWORK = "datil-dev"; // Testnet
+const LIT_RELAY_API_KEY = process.env.LIT_RELAY_API_KEY;
 
 export interface ConditionalSigningRule {
   riskThreshold: {
@@ -10,9 +12,9 @@ export interface ConditionalSigningRule {
     high: number; // > 60
   };
   actions: {
-    safe: 'auto-approve';
-    medium: 'manual-override';
-    high: 'auto-block';
+    safe: "auto-approve";
+    medium: "manual-override";
+    high: "auto-block";
   };
 }
 
@@ -23,9 +25,9 @@ export const DEFAULT_RULES: ConditionalSigningRule = {
     high: 100,
   },
   actions: {
-    safe: 'auto-approve',
-    medium: 'manual-override',
-    high: 'auto-block',
+    safe: "auto-approve",
+    medium: "manual-override",
+    high: "auto-block",
   },
 };
 
@@ -42,10 +44,10 @@ export class LitProtocolService {
       });
 
       await this.client.connect();
-      console.log('✅ Lit Protocol connected');
+      console.log("✅ Lit Protocol connected");
       return true;
     } catch (error) {
-      console.error('Error initializing Lit Protocol:', error);
+      console.error("Error initializing Lit Protocol:", error);
       return false;
     }
   }
@@ -62,10 +64,10 @@ export class LitProtocolService {
       });
 
       this.pkp = pkp;
-      console.log('✅ PKP generated:', pkp.tokenId);
+      console.log("✅ PKP generated:", pkp.tokenId);
       return pkp;
     } catch (error) {
-      console.error('Error generating PKP:', error);
+      console.error("Error generating PKP:", error);
       throw error;
     }
   }
@@ -76,7 +78,7 @@ export class LitProtocolService {
     riskScore: number,
     rules: ConditionalSigningRule = DEFAULT_RULES
   ): Promise<{
-    action: 'approved' | 'blocked' | 'manual-required';
+    action: "approved" | "blocked" | "manual-required";
     signature?: string;
     reason: string;
     userMustConfirm: boolean;
@@ -87,25 +89,25 @@ export class LitProtocolService {
 
     try {
       // Determine action based on risk score
-      let action: 'approved' | 'blocked' | 'manual-required';
+      let action: "approved" | "blocked" | "manual-required";
       let reason: string;
       let userMustConfirm = true; // ALL transactions require user confirmation
 
       if (riskScore < rules.riskThreshold.safe) {
-        action = 'approved';
+        action = "approved";
         reason = `✅ Safe transaction (risk: ${riskScore}/100). Ready for your confirmation.`;
       } else if (riskScore < rules.riskThreshold.medium) {
-        action = 'manual-required';
+        action = "manual-required";
         reason = `⚠️ Medium risk (${riskScore}/100). Please review carefully before confirming.`;
       } else {
-        action = 'blocked';
+        action = "blocked";
         reason = `🛑 High risk (${riskScore}/100). Transaction blocked for your safety.`;
         userMustConfirm = false; // Blocked transactions don't need confirmation
       }
 
       // USER-INITIATED: Never auto-sign, always require wallet confirmation
       // Lit Protocol is used for risk assessment, not automatic execution
-      console.log('Transaction risk assessment:', {
+      console.log("Transaction risk assessment:", {
         action,
         riskScore,
         reason,
@@ -113,7 +115,7 @@ export class LitProtocolService {
       });
 
       // If not blocked, prepare transaction for user confirmation
-      if (action !== 'blocked') {
+      if (action !== "blocked") {
         // Transaction data is prepared but NOT signed automatically
         // User must confirm in their wallet
         return {
@@ -129,7 +131,7 @@ export class LitProtocolService {
         userMustConfirm: false,
       };
     } catch (error) {
-      console.error('Error in conditional signing:', error);
+      console.error("Error in conditional signing:", error);
       throw error;
     }
   }
@@ -156,7 +158,7 @@ export class LitProtocolService {
 
         const result = await this.conditionalSign(tx, riskScore);
 
-        if (result.action === 'blocked') {
+        if (result.action === "blocked") {
           return {
             success: false,
             results,
@@ -164,9 +166,9 @@ export class LitProtocolService {
           };
         }
 
-        if (result.action === 'manual-required') {
+        if (result.action === "manual-required") {
           // In production, this would prompt user
-          console.log('Manual approval required for transaction', i);
+          console.log("Manual approval required for transaction", i);
         }
 
         results.push(result);
@@ -177,14 +179,14 @@ export class LitProtocolService {
         results,
       };
     } catch (error) {
-      console.error('Error executing batch transaction:', error);
+      console.error("Error executing batch transaction:", error);
       throw error;
     }
   }
 
   // Automatic safety actions
   static async executeEmergencyAction(
-    action: 'revoke-approvals' | 'migrate-to-pyusd' | 'emergency-transfer',
+    action: "revoke-approvals" | "migrate-to-pyusd" | "emergency-transfer",
     params: any
   ): Promise<boolean> {
     if (!this.client) {
@@ -193,12 +195,12 @@ export class LitProtocolService {
 
     try {
       console.log(`Executing emergency action: ${action}`);
-      
+
       // This would execute the appropriate action via Lit Protocol
       // For now, return success
       return true;
     } catch (error) {
-      console.error('Error executing emergency action:', error);
+      console.error("Error executing emergency action:", error);
       return false;
     }
   }

@@ -1,14 +1,14 @@
 // Comprehensive Risk Detection Engine - ZERO DUMMY DATA
-import { Token, SecurityRisk, Alert } from '@/types';
-import { GroqAI } from './groq';
-import { HardhatAnalyzer, SecurityAuditResult } from './hardhat-analyzer';
-import BlockscoutAPI from './blockscout';
-import { ethers } from 'ethers';
+import { Token, SecurityRisk, Alert } from "@/types";
+import { GroqAI } from "./groq";
+import { HardhatAnalyzer, SecurityAuditResult } from "./hardhat-analyzer";
+import BlockscoutAPI from "./blockscout";
+import { ethers } from "ethers";
 
 export interface RiskScore {
   overall: number; // 0-100
-  category: 'safe' | 'medium' | 'high' | 'critical';
-  color: 'green' | 'yellow' | 'orange' | 'red';
+  category: "safe" | "medium" | "high" | "critical";
+  color: "green" | "yellow" | "orange" | "red";
   factors: RiskFactors;
   badges: TrustBadge[];
   warnings: string[];
@@ -24,11 +24,17 @@ export interface RiskFactors {
 }
 
 export interface TrustBadge {
-  type: 'verified' | 'audited' | 'stable_liquidity' | 'safe_dev' | 'established' | 'warning';
+  type:
+    | "verified"
+    | "audited"
+    | "stable_liquidity"
+    | "safe_dev"
+    | "established"
+    | "warning";
   label: string;
   description: string;
   icon: string;
-  color: 'green' | 'yellow' | 'red';
+  color: "green" | "yellow" | "red";
 }
 
 export interface LiquidityData {
@@ -43,7 +49,7 @@ export interface CreatorAnalysis {
   recentDumps: boolean;
   exchangeTransfers: number;
   multiSigChanges: number;
-  riskLevel: 'low' | 'medium' | 'high';
+  riskLevel: "low" | "medium" | "high";
 }
 
 export class RiskEngine {
@@ -53,7 +59,7 @@ export class RiskEngine {
   static async calculateTokenRisk(
     token: Token,
     contractAddress: string,
-    provider: ethers.Provider
+    provider: ethers.providers.Provider
   ): Promise<RiskScore> {
     const factors: RiskFactors = {
       contractVerification: 0,
@@ -68,13 +74,17 @@ export class RiskEngine {
     const recommendations: string[] = [];
 
     // 1. Contract Verification Check (0-25 points)
-    const verificationResult = await this.checkContractVerification(contractAddress);
+    const verificationResult =
+      await this.checkContractVerification(contractAddress);
     factors.contractVerification = verificationResult.score;
     badges.push(...verificationResult.badges);
     warnings.push(...verificationResult.warnings);
 
     // 2. Approval Risk Analysis (0-25 points)
-    const approvalResult = await this.analyzeApprovalRisk(contractAddress, provider);
+    const approvalResult = await this.analyzeApprovalRisk(
+      contractAddress,
+      provider
+    );
     factors.approvalRisk = approvalResult.score;
     warnings.push(...approvalResult.warnings);
 
@@ -102,7 +112,9 @@ export class RiskEngine {
     const { category, color } = this.categorizeRisk(overall);
 
     // Generate recommendations
-    recommendations.push(...this.generateRecommendations(overall, factors, warnings));
+    recommendations.push(
+      ...this.generateRecommendations(overall, factors, warnings)
+    );
 
     return {
       overall,
@@ -118,7 +130,9 @@ export class RiskEngine {
   /**
    * Check contract verification status
    */
-  private static async checkContractVerification(contractAddress: string): Promise<{
+  private static async checkContractVerification(
+    contractAddress: string
+  ): Promise<{
     score: number;
     badges: TrustBadge[];
     warnings: string[];
@@ -128,57 +142,61 @@ export class RiskEngine {
     let score = 0;
 
     try {
-      const isVerified = await BlockscoutAPI.isContractVerified(contractAddress);
+      const isVerified =
+        await BlockscoutAPI.isContractVerified(contractAddress);
 
       if (isVerified) {
         score = 0; // Verified = no risk points
         badges.push({
-          type: 'verified',
-          label: 'Verified Contract',
-          description: 'Source code verified on Blockscout',
-          icon: '✅',
-          color: 'green',
+          type: "verified",
+          label: "Verified Contract",
+          description: "Source code verified on Blockscout",
+          icon: "✅",
+          color: "green",
         });
 
         // Get bytecode analysis
         try {
-          const sourceData = await BlockscoutAPI.getContractSource(contractAddress);
+          const sourceData =
+            await BlockscoutAPI.getContractSource(contractAddress);
           const auditResult = await HardhatAnalyzer.analyzeContract(
             contractAddress,
-            '',
+            "",
             sourceData.SourceCode
           );
 
           if (auditResult.score >= 80) {
             badges.push({
-              type: 'audited',
-              label: 'Secure Code',
+              type: "audited",
+              label: "Secure Code",
               description: `Security score: ${auditResult.score}/100`,
-              icon: '🔒',
-              color: 'green',
+              icon: "🔒",
+              color: "green",
             });
           } else if (auditResult.score < 60) {
             score += 15;
-            warnings.push(`Contract has security vulnerabilities (score: ${auditResult.score}/100)`);
+            warnings.push(
+              `Contract has security vulnerabilities (score: ${auditResult.score}/100)`
+            );
           }
         } catch (error) {
-          console.error('Error analyzing contract:', error);
+          console.error("Error analyzing contract:", error);
         }
       } else {
         score = 25; // Unverified = maximum risk points
         badges.push({
-          type: 'warning',
-          label: 'Unverified',
-          description: 'Contract source code not verified',
-          icon: '⚠️',
-          color: 'red',
+          type: "warning",
+          label: "Unverified",
+          description: "Contract source code not verified",
+          icon: "⚠️",
+          color: "red",
         });
-        warnings.push('Contract is not verified - cannot audit source code');
+        warnings.push("Contract is not verified - cannot audit source code");
       }
     } catch (error) {
-      console.error('Error checking verification:', error);
+      console.error("Error checking verification:", error);
       score = 20;
-      warnings.push('Unable to verify contract status');
+      warnings.push("Unable to verify contract status");
     }
 
     return { score, badges, warnings };
@@ -189,7 +207,7 @@ export class RiskEngine {
    */
   private static async analyzeApprovalRisk(
     contractAddress: string,
-    provider: ethers.Provider
+    provider: ethers.providers.Provider
   ): Promise<{
     score: number;
     warnings: string[];
@@ -200,23 +218,29 @@ export class RiskEngine {
     try {
       // Check for common approval patterns in bytecode
       const code = await provider.getCode(contractAddress);
-      
+
       // Check for unlimited approval patterns
-      if (code.includes('ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')) {
+      if (
+        code.includes(
+          "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        )
+      ) {
         score += 10;
-        warnings.push('Contract may use unlimited approvals');
+        warnings.push("Contract may use unlimited approvals");
       }
 
       // Check for approval-related functions
       const contract = new ethers.Contract(
         contractAddress,
-        ['function allowance(address owner, address spender) view returns (uint256)'],
+        [
+          "function allowance(address owner, address spender) view returns (uint256)",
+        ],
         provider
       );
 
       // Additional checks would go here
     } catch (error) {
-      console.error('Error analyzing approvals:', error);
+      console.error("Error analyzing approvals:", error);
       score += 5;
     }
 
@@ -226,7 +250,9 @@ export class RiskEngine {
   /**
    * Analyze creator wallet behavior
    */
-  private static async analyzeCreatorBehavior(contractAddress: string): Promise<{
+  private static async analyzeCreatorBehavior(
+    contractAddress: string
+  ): Promise<{
     score: number;
     badges: TrustBadge[];
     warnings: string[];
@@ -238,26 +264,25 @@ export class RiskEngine {
     try {
       // Get contract creation transaction
       const sourceData = await BlockscoutAPI.getContractSource(contractAddress);
-      
+
       if (sourceData.ContractName) {
         // Contract has been around for a while
         badges.push({
-          type: 'established',
-          label: 'Established Token',
-          description: 'Contract deployed and verified',
-          icon: '⏰',
-          color: 'green',
+          type: "established",
+          label: "Established Token",
+          description: "Contract deployed and verified",
+          icon: "⏰",
+          color: "green",
         });
       }
 
       // Check creator transactions
       // This would require additional API calls to track creator behavior
       // For now, we'll use heuristics
-
     } catch (error) {
-      console.error('Error analyzing creator:', error);
+      console.error("Error analyzing creator:", error);
       score += 10;
-      warnings.push('Unable to analyze contract creator');
+      warnings.push("Unable to analyze contract creator");
     }
 
     return { score, badges, warnings };
@@ -278,22 +303,27 @@ export class RiskEngine {
     try {
       // In production, you would query DEX APIs (Uniswap, Sushiswap, etc.)
       // For now, we'll use transaction volume as a proxy
-      const transfers = await BlockscoutAPI.getTokenTransfers(contractAddress, undefined, 1, 100);
+      const transfers = await BlockscoutAPI.getTokenTransfers(
+        contractAddress,
+        undefined,
+        1,
+        100
+      );
 
       if (transfers.length > 50) {
         badges.push({
-          type: 'stable_liquidity',
-          label: 'Active Trading',
-          description: 'High transaction volume',
-          icon: '💎',
-          color: 'green',
+          type: "stable_liquidity",
+          label: "Active Trading",
+          description: "High transaction volume",
+          icon: "💎",
+          color: "green",
         });
       } else if (transfers.length < 10) {
         score += 10;
-        warnings.push('Low trading activity - liquidity may be limited');
+        warnings.push("Low trading activity - liquidity may be limited");
       }
     } catch (error) {
-      console.error('Error analyzing liquidity:', error);
+      console.error("Error analyzing liquidity:", error);
       score += 5;
     }
 
@@ -305,7 +335,7 @@ export class RiskEngine {
    */
   private static async detectHoneypot(
     contractAddress: string,
-    provider: ethers.Provider
+    provider: ethers.providers.Provider
   ): Promise<{
     score: number;
     warnings: string[];
@@ -314,14 +344,17 @@ export class RiskEngine {
     let score = 0;
 
     try {
-      const result = await HardhatAnalyzer.testHoneypot(contractAddress, provider);
+      const result = await HardhatAnalyzer.testHoneypot(
+        contractAddress,
+        provider
+      );
 
       if (result.isHoneypot) {
         score = 15; // Maximum honeypot risk
-        warnings.push('⚠️ HONEYPOT DETECTED: Cannot sell this token');
+        warnings.push("⚠️ HONEYPOT DETECTED: Cannot sell this token");
       }
     } catch (error) {
-      console.error('Error detecting honeypot:', error);
+      console.error("Error detecting honeypot:", error);
     }
 
     return { score, warnings };
@@ -331,17 +364,17 @@ export class RiskEngine {
    * Categorize risk level
    */
   private static categorizeRisk(score: number): {
-    category: 'safe' | 'medium' | 'high' | 'critical';
-    color: 'green' | 'yellow' | 'orange' | 'red';
+    category: "safe" | "medium" | "high" | "critical";
+    color: "green" | "yellow" | "orange" | "red";
   } {
     if (score <= 25) {
-      return { category: 'safe', color: 'green' };
+      return { category: "safe", color: "green" };
     } else if (score <= 55) {
-      return { category: 'medium', color: 'yellow' };
+      return { category: "medium", color: "yellow" };
     } else if (score <= 80) {
-      return { category: 'high', color: 'orange' };
+      return { category: "high", color: "orange" };
     } else {
-      return { category: 'critical', color: 'red' };
+      return { category: "critical", color: "red" };
     }
   }
 
@@ -356,25 +389,25 @@ export class RiskEngine {
     const recommendations: string[] = [];
 
     if (overall > 80) {
-      recommendations.push('🚨 DO NOT INTERACT - Critical risk detected');
-      recommendations.push('Consider migrating assets to PYUSD stablecoin');
+      recommendations.push("🚨 DO NOT INTERACT - Critical risk detected");
+      recommendations.push("Consider migrating assets to PYUSD stablecoin");
     } else if (overall > 55) {
-      recommendations.push('⚠️ High risk - Only interact with small amounts');
-      recommendations.push('Revoke any existing approvals immediately');
+      recommendations.push("⚠️ High risk - Only interact with small amounts");
+      recommendations.push("Revoke any existing approvals immediately");
     } else if (overall > 25) {
-      recommendations.push('⚡ Medium risk - Exercise caution');
-      recommendations.push('Set limited approvals only');
+      recommendations.push("⚡ Medium risk - Exercise caution");
+      recommendations.push("Set limited approvals only");
     } else {
-      recommendations.push('✅ Low risk detected');
-      recommendations.push('Still recommended to use limited approvals');
+      recommendations.push("✅ Low risk detected");
+      recommendations.push("Still recommended to use limited approvals");
     }
 
     if (factors.contractVerification > 15) {
-      recommendations.push('Verify contract on Blockscout before interacting');
+      recommendations.push("Verify contract on Blockscout before interacting");
     }
 
     if (factors.honeypotRisk > 10) {
-      recommendations.push('Test with small amount first - possible honeypot');
+      recommendations.push("Test with small amount first - possible honeypot");
     }
 
     return recommendations;
@@ -402,15 +435,15 @@ Risk Factors:
 - Liquidity: ${riskScore.factors.liquidityAnalysis}/15
 - Honeypot Risk: ${riskScore.factors.honeypotRisk}/15
 
-Warnings: ${riskScore.warnings.join(', ')}
+Warnings: ${riskScore.warnings.join(", ")}
 
 Provide a concise security analysis in plain English (2-3 sentences) explaining the main risks and whether users should interact with this token.`;
 
       const analysis = await GroqAI.analyzeSecurityRisk(prompt);
       return analysis;
     } catch (error) {
-      console.error('Error getting AI analysis:', error);
-      return 'Unable to generate AI analysis at this time.';
+      console.error("Error getting AI analysis:", error);
+      return "Unable to generate AI analysis at this time.";
     }
   }
 }

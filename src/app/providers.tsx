@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
-import { ReactNode } from 'react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { WagmiProvider, createConfig, http } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
-import { RainbowKitProvider, getDefaultWallets, darkTheme } from '@rainbow-me/rainbowkit';
-import { Toaster } from 'react-hot-toast';
-import { ThemeProvider } from '@/hooks/useTheme';
+import { ReactNode } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { WagmiProvider, createConfig, http } from "wagmi";
+import { mainnet, sepolia } from "wagmi/chains";
+import {
+  RainbowKitProvider,
+  getDefaultWallets,
+  darkTheme,
+} from "@rainbow-me/rainbowkit";
+import { Toaster } from "react-hot-toast";
+import { ThemeProvider } from "@/hooks/useTheme";
 
-import '@rainbow-me/rainbowkit/styles.css';
+import "@rainbow-me/rainbowkit/styles.css";
 
 // Configure wallets
 const { connectors } = getDefaultWallets({
-  appName: 'Crypto Sentinel X',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo',
+  appName: "Crypto Sentinel X",
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "demo",
 });
 
 // Create wagmi config with Mainnet and Sepolia support
@@ -48,11 +52,11 @@ export function Providers({ children }: ProvidersProps) {
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: '#00D4FF',
-            accentColorForeground: 'white',
-            borderRadius: 'medium',
-            fontStack: 'system',
-            overlayBlur: 'small',
+            accentColor: "#00D4FF",
+            accentColorForeground: "white",
+            borderRadius: "medium",
+            fontStack: "system",
+            overlayBlur: "small",
           })}
         >
           <ThemeProvider>
@@ -62,22 +66,22 @@ export function Providers({ children }: ProvidersProps) {
               toastOptions={{
                 duration: 4000,
                 style: {
-                  background: 'rgba(0, 0, 0, 0.8)',
-                  color: 'white',
-                  border: '1px solid rgba(0, 212, 255, 0.3)',
-                  borderRadius: '12px',
-                  backdropFilter: 'blur(10px)',
+                  background: "rgba(0, 0, 0, 0.8)",
+                  color: "white",
+                  border: "1px solid rgba(0, 212, 255, 0.3)",
+                  borderRadius: "12px",
+                  backdropFilter: "blur(10px)",
                 },
                 success: {
                   iconTheme: {
-                    primary: '#10B981',
-                    secondary: 'white',
+                    primary: "#10B981",
+                    secondary: "white",
                   },
                 },
                 error: {
                   iconTheme: {
-                    primary: '#EF4444',
-                    secondary: 'white',
+                    primary: "#EF4444",
+                    secondary: "white",
                   },
                 },
               }}

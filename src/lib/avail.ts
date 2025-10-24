@@ -1,183 +1,271 @@
-// Avail Integration for Off-Chain Threat Intelligence
-import axios from 'axios';
+// Avail Network Integration for Decentralized Data Availability
+import axios from "axios";
 
+const AVAIL_API_URL = process.env.AVAIL_API_URL || "https://api.avail.so";
 const AVAIL_API_KEY = process.env.AVAIL_API_KEY;
-const AVAIL_BASE_URL = 'https://api.avail.so/v1'; // Placeholder URL
 
-export class AvailThreatIntelligence {
-  // Check if an address is flagged as malicious
-  static async checkAddress(address: string): Promise<{
-    isMalicious: boolean;
-    riskScore: number;
-    reasons: string[];
-    sources: string[];
-  }> {
+export interface AvailProof {
+  dataHash: string;
+  blockNumber: number;
+  timestamp: Date;
+  verified: boolean;
+}
+
+export interface ContractMetadata {
+  address: string;
+  name: string;
+  symbol?: string;
+  verified: boolean;
+  auditReports: string[];
+  creatorReputation: number;
+  deploymentDate: Date;
+  availProof?: AvailProof;
+}
+
+export class AvailNetwork {
+  // Store contract metadata on Avail
+  static async storeMetadata(
+    contractAddress: string,
+    metadata: any
+  ): Promise<string> {
     if (!AVAIL_API_KEY) {
-      console.warn('Avail API key not configured. Using fallback threat detection.');
-      return {
-        isMalicious: false,
-        riskScore: 0,
-        reasons: [],
-        sources: [],
-      };
+      console.warn("Avail API key not configured, using local storage");
+      return this.storeLocally(contractAddress, metadata);
     }
 
     try {
-      // This is a placeholder implementation
-      // In production, this would query Avail's threat intelligence database
-      
-      // For now, return mock data based on address patterns
-      const mockThreatData = await this.getMockThreatData(address);
-      return mockThreatData;
+      const response = await axios.post(
+        `${AVAIL_API_URL}/submit`,
+        {
+          data: JSON.stringify(metadata),
+          contractAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${AVAIL_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.dataHash;
     } catch (error) {
-      console.error('Error checking address with Avail:', error);
-      return {
-        isMalicious: false,
-        riskScore: 0,
-        reasons: [],
-        sources: [],
-      };
+      console.error("Error storing on Avail:", error);
+      return this.storeLocally(contractAddress, metadata);
     }
   }
 
-  // Check if a token is a honeypot
-  static async checkHoneypot(tokenAddress: string): Promise<{
-    isHoneypot: boolean;
-    canBuy: boolean;
-    canSell: boolean;
-    taxBuy: number;
-    taxSell: number;
-  }> {
+  // Retrieve contract metadata from Avail
+  static async getMetadata(
+    contractAddress: string
+  ): Promise<ContractMetadata | null> {
     if (!AVAIL_API_KEY) {
-      return {
-        isHoneypot: false,
-        canBuy: true,
-        canSell: true,
-        taxBuy: 0,
-        taxSell: 0,
-      };
+      return this.getLocally(contractAddress);
     }
 
     try {
-      // Placeholder for honeypot detection
-      // In production, this would simulate buy/sell transactions
-      return {
-        isHoneypot: false,
-        canBuy: true,
-        canSell: true,
-        taxBuy: 0,
-        taxSell: 0,
-      };
+      const response = await axios.get(
+        `${AVAIL_API_URL}/retrieve/${contractAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${AVAIL_API_KEY}`,
+          },
+        }
+      );
+
+      return response.data;
     } catch (error) {
-      console.error('Error checking honeypot:', error);
-      return {
-        isHoneypot: false,
-        canBuy: true,
-        canSell: true,
-        taxBuy: 0,
-        taxSell: 0,
-      };
+      console.error("Error retrieving from Avail:", error);
+      return this.getLocally(contractAddress);
     }
   }
 
-  // Get community-reported scams and threats
-  static async getCommunityThreats(): Promise<{
-    scamTokens: string[];
-    phishingSites: string[];
-    maliciousContracts: string[];
-  }> {
+  // Verify data availability proof
+  static async verifyProof(dataHash: string): Promise<boolean> {
     if (!AVAIL_API_KEY) {
-      return {
-        scamTokens: [],
-        phishingSites: [],
-        maliciousContracts: [],
-      };
+      return true; // Assume valid for local storage
     }
 
     try {
-      // Placeholder for community threat data
-      return {
-        scamTokens: [],
-        phishingSites: [],
-        maliciousContracts: [],
-      };
-    } catch (error) {
-      console.error('Error fetching community threats:', error);
-      return {
-        scamTokens: [],
-        phishingSites: [],
-        maliciousContracts: [],
-      };
-    }
-  }
+      const response = await axios.get(`${AVAIL_API_URL}/verify/${dataHash}`, {
+        headers: {
+          Authorization: `Bearer ${AVAIL_API_KEY}`,
+        },
+      });
 
-  // Store threat intelligence data
-  static async reportThreat(data: {
-    address: string;
-    type: 'scam' | 'phishing' | 'honeypot' | 'malicious';
-    description: string;
-    evidence?: string;
-  }): Promise<boolean> {
-    if (!AVAIL_API_KEY) {
-      console.warn('Avail API key not configured. Cannot report threat.');
-      return false;
-    }
-
-    try {
-      // Placeholder for threat reporting
-      console.log('Threat reported:', data);
-      return true;
+      return response.data.verified;
     } catch (error) {
-      console.error('Error reporting threat:', error);
+      console.error("Error verifying proof:", error);
       return false;
     }
   }
 
-  // Check if Avail is available
+  // Get creator reputation from Avail
+  static async getCreatorReputation(creatorAddress: string): Promise<{
+    score: number;
+    totalContracts: number;
+    verifiedContracts: number;
+    rugPulls: number;
+    successfulProjects: number;
+  }> {
+    const cacheKey = `creator:${creatorAddress}`;
+
+    try {
+      // Check local cache first
+      const cached = this.getFromCache(cacheKey);
+      if (cached) return cached;
+
+      if (!AVAIL_API_KEY) {
+        return this.calculateLocalReputation(creatorAddress);
+      }
+
+      const response = await axios.get(
+        `${AVAIL_API_URL}/reputation/${creatorAddress}`,
+        {
+          headers: {
+            Authorization: `Bearer ${AVAIL_API_KEY}`,
+          },
+        }
+      );
+
+      const reputation = response.data;
+      this.setCache(cacheKey, reputation, 3600); // Cache for 1 hour
+      return reputation;
+    } catch (error) {
+      console.error("Error getting creator reputation:", error);
+      return this.calculateLocalReputation(creatorAddress);
+    }
+  }
+
+  // Store audit report on Avail
+  static async storeAuditReport(
+    contractAddress: string,
+    report: {
+      auditor: string;
+      date: Date;
+      findings: any[];
+      score: number;
+    }
+  ): Promise<string> {
+    if (!AVAIL_API_KEY) {
+      return this.storeLocally(`audit:${contractAddress}`, report);
+    }
+
+    try {
+      const response = await axios.post(
+        `${AVAIL_API_URL}/audit`,
+        {
+          contractAddress,
+          report,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${AVAIL_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      return response.data.reportHash;
+    } catch (error) {
+      console.error("Error storing audit report:", error);
+      return this.storeLocally(`audit:${contractAddress}`, report);
+    }
+  }
+
+  // Get trust badges for contract
+  static async getTrustBadges(contractAddress: string): Promise<{
+    verified: boolean;
+    audited: boolean;
+    active: boolean;
+    established: boolean;
+    safeCreator: boolean;
+  }> {
+    try {
+      const metadata = await this.getMetadata(contractAddress);
+
+      if (!metadata) {
+        return {
+          verified: false,
+          audited: false,
+          active: false,
+          established: false,
+          safeCreator: false,
+        };
+      }
+
+      const now = new Date();
+      const deploymentAge = now.getTime() - metadata.deploymentDate.getTime();
+      const daysOld = deploymentAge / (1000 * 60 * 60 * 24);
+
+      return {
+        verified: metadata.verified,
+        audited: metadata.auditReports.length > 0,
+        active: true, // Would check recent transactions
+        established: daysOld > 90, // 90+ days old
+        safeCreator: metadata.creatorReputation > 70,
+      };
+    } catch (error) {
+      console.error("Error getting trust badges:", error);
+      return {
+        verified: false,
+        audited: false,
+        active: false,
+        established: false,
+        safeCreator: false,
+      };
+    }
+  }
+
+  // Local storage fallback
+  private static localStorage = new Map<string, any>();
+
+  private static storeLocally(key: string, data: any): string {
+    const hash = `local_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    this.localStorage.set(key, { data, hash, timestamp: Date.now() });
+    return hash;
+  }
+
+  private static getLocally(key: string): any {
+    const item = this.localStorage.get(key);
+    return item ? item.data : null;
+  }
+
+  private static cache = new Map<string, { data: any; expiry: number }>();
+
+  private static getFromCache(key: string): any {
+    const item = this.cache.get(key);
+    if (!item) return null;
+    if (Date.now() > item.expiry) {
+      this.cache.delete(key);
+      return null;
+    }
+    return item.data;
+  }
+
+  private static setCache(key: string, data: any, ttl: number) {
+    this.cache.set(key, {
+      data,
+      expiry: Date.now() + ttl * 1000,
+    });
+  }
+
+  private static async calculateLocalReputation(
+    creatorAddress: string
+  ): Promise<any> {
+    // Fallback reputation calculation
+    return {
+      score: 50,
+      totalContracts: 0,
+      verifiedContracts: 0,
+      rugPulls: 0,
+      successfulProjects: 0,
+    };
+  }
+
   static isAvailable(): boolean {
     return !!AVAIL_API_KEY;
   }
-
-  // Mock threat data for demonstration
-  private static async getMockThreatData(address: string): Promise<{
-    isMalicious: boolean;
-    riskScore: number;
-    reasons: string[];
-    sources: string[];
-  }> {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Mock some addresses as malicious for demo
-    const knownBadAddresses = [
-      '0x0000000000000000000000000000000000000000',
-      '0xdead000000000000000000000000000000000000',
-    ];
-
-    const isMalicious = knownBadAddresses.some(
-      bad => address.toLowerCase().includes(bad.toLowerCase())
-    );
-
-    if (isMalicious) {
-      return {
-        isMalicious: true,
-        riskScore: 85,
-        reasons: [
-          'Address flagged in community reports',
-          'Associated with known scam tokens',
-          'Suspicious transaction patterns detected',
-        ],
-        sources: ['Community Reports', 'On-Chain Analysis', 'Threat Database'],
-      };
-    }
-
-    return {
-      isMalicious: false,
-      riskScore: 10,
-      reasons: [],
-      sources: [],
-    };
-  }
 }
 
-export default AvailThreatIntelligence;
+export default AvailNetwork;

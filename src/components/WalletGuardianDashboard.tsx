@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { Shield, TrendingUp, Search, Menu, X } from 'lucide-react';
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
-import PortfolioModule from '@/modules/portfolio/PortfolioModule';
-import SecurityModule from '@/modules/security/SecurityModule';
-import ExploreModule from '@/modules/explore/ExploreModule';
-import { useWallet } from '@/hooks/useWallet';
-import { useRealTimeMonitoring } from '@/hooks/useRealTimeMonitoring';
-import { Toaster } from 'react-hot-toast';
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useAccount } from "wagmi";
+import { Shield, TrendingUp, Search, Menu, X } from "lucide-react";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import PortfolioModule from "@/modules/portfolio/PortfolioModule";
+import SecurityModule from "@/modules/security/SecurityModule";
+import ExploreModule from "@/modules/explore/ExploreModule";
+import { useWallet } from "@/hooks/useWallet";
+import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
+import { Toaster } from "react-hot-toast";
 
-type ActiveModule = 'portfolio' | 'security' | 'explore';
+type ActiveModule = "portfolio" | "security" | "explore";
 
 export default function WalletGuardianDashboard() {
   const { isConnected } = useAccount();
   const { portfolio } = useWallet();
   const { startMonitoring, isMonitoring } = useRealTimeMonitoring();
-  const [activeModule, setActiveModule] = useState<ActiveModule>('portfolio');
+  const [activeModule, setActiveModule] = useState<ActiveModule>("portfolio");
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Auto-start monitoring when portfolio loads
@@ -35,11 +35,11 @@ export default function WalletGuardianDashboard() {
 
   const renderActiveModule = () => {
     switch (activeModule) {
-      case 'portfolio':
+      case "portfolio":
         return <PortfolioModule />;
-      case 'security':
+      case "security":
         return <SecurityModule />;
-      case 'explore':
+      case "explore":
         return <ExploreModule />;
       default:
         return <PortfolioModule />;
@@ -49,7 +49,7 @@ export default function WalletGuardianDashboard() {
   return (
     <div className="min-h-screen bg-gradient-main text-white">
       {/* Header */}
-      <Header 
+      <Header
         onMenuClick={() => setSidebarOpen(true)}
         activeModule={activeModule}
         onModuleChange={setActiveModule}
@@ -89,22 +89,22 @@ export default function WalletGuardianDashboard() {
         toastOptions={{
           duration: 4000,
           style: {
-            background: 'rgba(0, 0, 0, 0.8)',
-            color: 'white',
-            border: '1px solid rgba(0, 212, 255, 0.3)',
-            borderRadius: '12px',
-            backdropFilter: 'blur(10px)',
+            background: "rgba(0, 0, 0, 0.8)",
+            color: "white",
+            border: "1px solid rgba(0, 212, 255, 0.3)",
+            borderRadius: "12px",
+            backdropFilter: "blur(10px)",
           },
           success: {
             iconTheme: {
-              primary: '#10B981',
-              secondary: 'white',
+              primary: "#10B981",
+              secondary: "white",
             },
           },
           error: {
             iconTheme: {
-              primary: '#EF4444',
-              secondary: 'white',
+              primary: "#EF4444",
+              secondary: "white",
             },
           },
         }}

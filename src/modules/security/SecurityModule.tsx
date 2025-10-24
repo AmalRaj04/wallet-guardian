@@ -1,19 +1,39 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useWallet } from '@/hooks/useWallet';
-import SecurityDashboard from './components/SecurityDashboard';
-import TokenAllowances from './components/TokenAllowances';
-import RiskAnalysis from './components/RiskAnalysis';
-import ThreatMonitor from './components/ThreatMonitor';
-import GlassCard from '@/components/ui/GlassCard';
-import { LoadingState } from '@/components/ui/LoadingState';
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useWallet } from "@/hooks/useWallet";
+import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
+import SecurityDashboard from "./components/SecurityDashboard";
+import TokenAllowances from "./components/TokenAllowances";
+import RiskAnalysis from "./components/RiskAnalysis";
+import ThreatMonitor from "./components/ThreatMonitor";
+import BytecodeAnalyzer from "./components/BytecodeAnalyzer";
+import GlassCard from "@/components/ui/GlassCard";
+import { LoadingState } from "@/components/ui/LoadingState";
 
 export default function SecurityModule() {
   const { isConnected, address } = useAccount();
   const { portfolio, isLoadingPortfolio } = useWallet();
+  const { startMonitoring, isMonitoring } = useRealTimeMonitoring();
+
+  // Start monitoring when wallet is connected
+  useEffect(() => {
+    if (isConnected && address && !isMonitoring && !isLoadingPortfolio) {
+      console.log("Starting monitoring for address:", address);
+      console.log("Tokens available:", portfolio?.tokens?.length || 0);
+      startMonitoring(portfolio?.tokens || []);
+    }
+  }, [
+    isConnected,
+    address,
+    isMonitoring,
+    isLoadingPortfolio,
+    portfolio?.tokens,
+    startMonitoring,
+  ]);
 
   if (!isConnected) {
     return (
@@ -31,7 +51,8 @@ export default function SecurityModule() {
               Secure Your Wallet
             </h2>
             <p className="text-gray-400 mb-8">
-              Connect your wallet to access advanced security monitoring, risk analysis, and threat detection features.
+              Connect your wallet to access advanced security monitoring, risk
+              analysis, and threat detection features.
             </p>
             <ConnectButton />
           </GlassCard>
@@ -75,6 +96,15 @@ export default function SecurityModule() {
         <SecurityDashboard tokens={tokens} />
       </motion.div>
 
+      {/* Hardhat 3 Bytecode Analyzer */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <BytecodeAnalyzer />
+      </motion.div>
+
       {/* Main Content */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
         {/* Left Column */}
@@ -82,15 +112,15 @@ export default function SecurityModule() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.3 }}
           >
             <TokenAllowances tokens={tokens} walletAddress={address} />
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.4 }}
           >
             <RiskAnalysis tokens={tokens} />
           </motion.div>
@@ -100,7 +130,7 @@ export default function SecurityModule() {
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 0.5 }}
         >
           <ThreatMonitor />
         </motion.div>

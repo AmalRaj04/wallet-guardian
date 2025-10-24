@@ -1,40 +1,41 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Activity, AlertTriangle, Shield, Zap } from 'lucide-react';
-import GlassCard from '@/components/ui/GlassCard';
-import { useRealTimeMonitoring } from '@/hooks/useRealTimeMonitoring';
+import { motion } from "framer-motion";
+import { Activity, AlertTriangle, Shield, Zap } from "lucide-react";
+import GlassCard from "@/components/ui/GlassCard";
+import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
 
 export default function ThreatMonitor() {
-  const { mempoolTransactions, threatsBlocked, fundsProtected, isMonitoring } = useRealTimeMonitoring();
+  const { mempoolTransactions, threatsBlocked, fundsProtected, isMonitoring } =
+    useRealTimeMonitoring();
 
   const recentTransactions = mempoolTransactions.slice(0, 10);
 
   const getThreatIcon = (threatType?: string) => {
     switch (threatType) {
-      case 'sandwich':
-        return '🥪';
-      case 'frontrun':
-        return '⚡';
-      case 'mev':
-        return '🤖';
-      case 'suspicious':
-        return '⚠️';
+      case "sandwich":
+        return "🥪";
+      case "frontrun":
+        return "⚡";
+      case "mev":
+        return "🤖";
+      case "suspicious":
+        return "⚠️";
       default:
-        return '📊';
+        return "📊";
     }
   };
 
   const getRiskColor = (riskLevel: string) => {
     switch (riskLevel) {
-      case 'high':
-        return 'text-red-400 bg-red-500/10 border-red-500/30';
-      case 'medium':
-        return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/30';
-      case 'low':
-        return 'text-green-400 bg-green-500/10 border-green-500/30';
+      case "high":
+        return "text-red-400 bg-red-500/10 border-red-500/30";
+      case "medium":
+        return "text-yellow-400 bg-yellow-500/10 border-yellow-500/30";
+      case "low":
+        return "text-green-400 bg-green-500/10 border-green-500/30";
       default:
-        return 'text-gray-400 bg-gray-500/10 border-gray-500/30';
+        return "text-gray-400 bg-gray-500/10 border-gray-500/30";
     }
   };
 
@@ -50,14 +51,20 @@ export default function ThreatMonitor() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Monitoring Status</p>
-                <p className={`text-xl font-bold ${isMonitoring ? 'text-green-400' : 'text-gray-400'}`}>
-                  {isMonitoring ? 'Live' : 'Paused'}
+                <p
+                  className={`text-xl font-bold ${isMonitoring ? "text-green-400" : "text-gray-400"}`}
+                >
+                  {isMonitoring ? "Live" : "Paused"}
                 </p>
               </div>
-              <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                isMonitoring ? 'bg-green-500/20' : 'bg-gray-500/20'
-              }`}>
-                <Activity className={`w-6 h-6 ${isMonitoring ? 'text-green-400 animate-pulse' : 'text-gray-400'}`} />
+              <div
+                className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                  isMonitoring ? "bg-green-500/20" : "bg-gray-500/20"
+                }`}
+              >
+                <Activity
+                  className={`w-6 h-6 ${isMonitoring ? "text-green-400 animate-pulse" : "text-gray-400"}`}
+                />
               </div>
             </div>
           </GlassCard>
@@ -72,7 +79,9 @@ export default function ThreatMonitor() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Threats Blocked</p>
-                <p className="text-xl font-bold text-green-400">{threatsBlocked}</p>
+                <p className="text-xl font-bold text-green-400">
+                  {threatsBlocked}
+                </p>
               </div>
               <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
                 <Shield className="w-6 h-6 text-green-400" />
@@ -90,7 +99,9 @@ export default function ThreatMonitor() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Funds Protected</p>
-                <p className="text-xl font-bold text-neon-blue">${fundsProtected.toFixed(2)}</p>
+                <p className="text-xl font-bold text-neon-blue">
+                  ${fundsProtected.toFixed(2)}
+                </p>
               </div>
               <div className="w-12 h-12 bg-neon-blue/20 rounded-lg flex items-center justify-center">
                 <Zap className="w-6 h-6 text-neon-blue" />
@@ -110,7 +121,9 @@ export default function ThreatMonitor() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Activity className="w-6 h-6 text-neon-blue" />
-              <h2 className="text-xl font-space-grotesk font-bold">Live Mempool Monitor</h2>
+              <h2 className="text-xl font-space-grotesk font-bold">
+                Live Mempool Monitor
+              </h2>
               {isMonitoring && (
                 <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-full animate-pulse">
                   LIVE
@@ -135,7 +148,8 @@ export default function ThreatMonitor() {
               <Shield className="w-16 h-16 text-green-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">All Clear</h3>
               <p className="text-gray-400">
-                No suspicious activity detected. We're monitoring your wallet 24/7.
+                No suspicious activity detected. We're monitoring your wallet
+                24/7.
               </p>
             </div>
           ) : (
@@ -165,16 +179,22 @@ export default function ThreatMonitor() {
                           )}
                         </div>
                         <div className="text-sm text-gray-400">
-                          <span>From: {tx.from.slice(0, 6)}...{tx.from.slice(-4)}</span>
-                          {' → '}
-                          <span>To: {tx.to?.slice(0, 6)}...{tx.to?.slice(-4)}</span>
+                          <span>
+                            From: {tx.from.slice(0, 6)}...{tx.from.slice(-4)}
+                          </span>
+                          {" → "}
+                          <span>
+                            To: {tx.to?.slice(0, 6)}...{tx.to?.slice(-4)}
+                          </span>
                         </div>
                         <div className="text-xs text-gray-500 mt-1">
                           {tx.timestamp.toLocaleTimeString()}
                         </div>
                       </div>
                     </div>
-                    <div className={`px-3 py-1 rounded-lg text-xs font-bold uppercase ${getRiskColor(tx.riskLevel)}`}>
+                    <div
+                      className={`px-3 py-1 rounded-lg text-xs font-bold uppercase ${getRiskColor(tx.riskLevel)}`}
+                    >
                       {tx.riskLevel}
                     </div>
                   </div>

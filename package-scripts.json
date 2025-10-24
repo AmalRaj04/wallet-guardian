@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "dev:all": "concurrently \"npm run dev\" \"npm run dev:backend\" \"npm run dev:ws\"",
+    "dev:backend": "ts-node src/server/backend-api.ts",
+    "dev:ws": "ts-node src/server/websocket-standalone.ts",
+    "build:backend": "tsc src/server/**/*.ts --outDir dist/server",
+    "start:backend": "node dist/server/backend-api.js",
+    "redis:start": "redis-server",
+    "redis:stop": "redis-cli shutdown"
+  }
+}

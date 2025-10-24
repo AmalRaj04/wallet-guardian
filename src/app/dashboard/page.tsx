@@ -176,8 +176,7 @@ export default function Dashboard() {
 
         try {
           // Get provider from wagmi
-          const ethereum = (window as { ethereum?: ethers.Eip1193Provider })
-            .ethereum;
+          const ethereum = (window as { ethereum?: any }).ethereum;
           if (!ethereum) throw new Error("No ethereum provider");
           // Use ethers v5 syntax
           const provider = new ethers.providers.Web3Provider(ethereum);

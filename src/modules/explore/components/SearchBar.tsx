@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X } from 'lucide-react';
-import { CoinGeckoAPI } from '@/lib/coingecko';
-import { Coin } from '@/types';
-import GlassCard from '@/components/ui/GlassCard';
-import { LoadingState } from '@/components/ui/LoadingState';
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, X } from "lucide-react";
+import { CoinGeckoAPI } from "@/lib/coingecko";
+import { Coin } from "@/types";
+import GlassCard from "@/components/ui/GlassCard";
+import { LoadingState } from "@/components/ui/LoadingState";
 
 interface SearchBarProps {
   value: string;
@@ -14,7 +14,11 @@ interface SearchBarProps {
   onCoinSelect: (coin: Coin) => void;
 }
 
-export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarProps) {
+export default function SearchBar({
+  value,
+  onChange,
+  onCoinSelect,
+}: SearchBarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -33,7 +37,7 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
       const searchResults = await CoinGeckoAPI.searchCoins(query);
       setResults(searchResults.slice(0, 8)); // Limit to 8 results
     } catch (error) {
-      console.error('Error searching coins:', error);
+      console.error("Error searching coins:", error);
       setResults([]);
     } finally {
       setIsLoading(false);
@@ -44,7 +48,7 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     onChange(newValue);
-    
+
     if (newValue.trim()) {
       setIsOpen(true);
       searchCoins(newValue.trim());
@@ -59,13 +63,16 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
     try {
       // Get full coin data
       const coinData = await CoinGeckoAPI.getCoinDetails(searchResult.id);
-      
+
       // Convert to our Coin type
       const coin: Coin = {
         id: coinData.id,
         symbol: coinData.symbol,
         name: coinData.name,
-        image: coinData.image?.large || coinData.image?.small || '',
+        image:
+          typeof coinData.image === "string"
+            ? coinData.image
+            : coinData.image?.large || coinData.image?.small || "",
         current_price: coinData.market_data?.current_price?.usd || 0,
         market_cap: coinData.market_data?.market_cap?.usd || 0,
         market_cap_rank: coinData.market_cap_rank || 0,
@@ -73,37 +80,43 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
         high_24h: coinData.market_data?.high_24h?.usd || 0,
         low_24h: coinData.market_data?.low_24h?.usd || 0,
         price_change_24h: coinData.market_data?.price_change_24h || 0,
-        price_change_percentage_24h: coinData.market_data?.price_change_percentage_24h || 0,
+        price_change_percentage_24h:
+          coinData.market_data?.price_change_percentage_24h || 0,
         circulating_supply: coinData.market_data?.circulating_supply || 0,
         total_supply: coinData.market_data?.total_supply || 0,
         max_supply: coinData.market_data?.max_supply || 0,
         ath: coinData.market_data?.ath?.usd || 0,
-        ath_change_percentage: coinData.market_data?.ath_change_percentage?.usd || 0,
-        ath_date: coinData.market_data?.ath_date?.usd || '',
+        ath_change_percentage:
+          coinData.market_data?.ath_change_percentage?.usd || 0,
+        ath_date: coinData.market_data?.ath_date?.usd || "",
         atl: coinData.market_data?.atl?.usd || 0,
-        atl_change_percentage: coinData.market_data?.atl_change_percentage?.usd || 0,
-        atl_date: coinData.market_data?.atl_date?.usd || '',
+        atl_change_percentage:
+          coinData.market_data?.atl_change_percentage?.usd || 0,
+        atl_date: coinData.market_data?.atl_date?.usd || "",
         last_updated: coinData.last_updated || new Date().toISOString(),
       };
 
       onCoinSelect(coin);
       setIsOpen(false);
-      onChange('');
+      onChange("");
     } catch (error) {
-      console.error('Error fetching coin details:', error);
+      console.error("Error fetching coin details:", error);
     }
   };
 
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -122,7 +135,7 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
         {value && (
           <button
             onClick={() => {
-              onChange('');
+              onChange("");
               setIsOpen(false);
               inputRef.current?.focus();
             }}
@@ -161,7 +174,8 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
                         alt={result.name}
                         className="w-8 h-8 rounded-full"
                         onError={(e) => {
-                          (e.target as HTMLImageElement).src = '/placeholder-coin.png';
+                          (e.target as HTMLImageElement).src =
+                            "/placeholder-coin.png";
                         }}
                       />
                       <div className="flex-1 min-w-0">
@@ -173,7 +187,7 @@ export default function SearchBar({ value, onChange, onCoinSelect }: SearchBarPr
                         </div>
                       </div>
                       <div className="text-sm text-gray-400">
-                        #{result.market_cap_rank || 'N/A'}
+                        #{result.market_cap_rank || "N/A"}
                       </div>
                     </button>
                   ))}

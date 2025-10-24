@@ -22,7 +22,7 @@ export interface Result {
  * Execute multiple calls in a single transaction using Multicall3
  */
 export async function multicall(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   calls: Call[]
 ): Promise<Result[]> {
   const multicall = new ethers.Contract(
@@ -40,7 +40,7 @@ export async function multicall(
         continue;
       }
       // normalize / validate address
-      const normalized = ethers.getAddress(call.target);
+      const normalized = ethers.utils.getAddress(call.target);
       formattedCalls.push({
         target: normalized,
         allowFailure: call.allowFailure ?? true,
@@ -98,7 +98,7 @@ export async function multicall(
  * Helper to create ERC-20 allowance call data
  */
 export function encodeAllowanceCall(owner: string, spender: string): string {
-  const iface = new ethers.Interface([
+  const iface = new ethers.utils.Interface([
     "function allowance(address owner, address spender) view returns (uint256)",
   ]);
   return iface.encodeFunctionData("allowance", [owner, spender]);
@@ -110,7 +110,7 @@ export function encodeAllowanceCall(owner: string, spender: string): string {
 export function decodeAllowanceResult(data: string): bigint {
   if (data === "0x" || !data) return BigInt(0);
   try {
-    const iface = new ethers.Interface([
+    const iface = new ethers.utils.Interface([
       "function allowance(address owner, address spender) view returns (uint256)",
     ]);
     const decoded = iface.decodeFunctionResult("allowance", data);

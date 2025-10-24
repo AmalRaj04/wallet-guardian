@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
-import GlassCard from './GlassCard';
+import { motion } from "framer-motion";
+import { Loader2 } from "lucide-react";
+import GlassCard from "./GlassCard";
 
 interface LoadingStateProps {
   message?: string;
   fullScreen?: boolean;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-export function LoadingState({ 
-  message = 'Loading...', 
+export function LoadingState({
+  message = "Loading...",
   fullScreen = false,
-  size = 'md' 
+  size = "md",
 }: LoadingStateProps) {
   const sizeClasses = {
-    sm: 'w-6 h-6',
-    md: 'w-10 h-10',
-    lg: 'w-16 h-16',
+    sm: "w-6 h-6",
+    md: "w-10 h-10",
+    lg: "w-16 h-16",
   };
 
   const content = (
     <div className="flex flex-col items-center justify-center space-y-4">
       <motion.div
         animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
       >
         <Loader2 className={`${sizeClasses[size]} text-neon-blue`} />
       </motion.div>
@@ -51,7 +51,7 @@ interface SkeletonProps {
   count?: number;
 }
 
-export function Skeleton({ className = '', count = 1 }: SkeletonProps) {
+export function Skeleton({ className = "", count = 1 }: SkeletonProps) {
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
@@ -107,11 +107,7 @@ export function ChartSkeleton() {
       <Skeleton className="h-6 w-32 mb-4" />
       <div className="h-64 flex items-end space-x-2">
         {Array.from({ length: 12 }).map((_, i) => (
-          <Skeleton
-            key={i}
-            className="flex-1"
-            className="flex-1"
-          />
+          <Skeleton key={i} className="flex-1" />
         ))}
       </div>
     </GlassCard>
