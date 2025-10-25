@@ -52,29 +52,6 @@ export default function EnhancedLandingPage() {
     },
   ];
 
-  const stats = [
-    {
-      icon: <Shield className="w-6 h-6" />,
-      value: "10K+",
-      label: "Protected Wallets",
-    },
-    {
-      icon: <Zap className="w-6 h-6" />,
-      value: "99.9%",
-      label: "Threat Detection",
-    },
-    {
-      icon: <Activity className="w-6 h-6" />,
-      value: "24/7",
-      label: "Real-Time Monitoring",
-    },
-    {
-      icon: <TrendingUp className="w-6 h-6" />,
-      value: "$50M+",
-      label: "Assets Secured",
-    },
-  ];
-
   const sponsorLogos = [
     {
       name: "Blockscout",
@@ -218,70 +195,46 @@ export default function EnhancedLandingPage() {
                 {({ openConnectModal, mounted }) => {
                   if (!mounted) return null;
                   return (
-                    <motion.div
+                    <motion.button
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
+                      onClick={openConnectModal}
+                      style={
+                        {
+                          "--background": "30 41 59",
+                          "--highlight": "255 255 255",
+                          "--bg-color":
+                            "linear-gradient(rgb(var(--background)), rgb(var(--background)))",
+                          "--border-color": `linear-gradient(145deg,
+                            rgb(var(--highlight)) 0%,
+                            rgb(var(--highlight) / 0.3) 33.33%,
+                            rgb(var(--highlight) / 0.14) 66.67%,
+                            rgb(var(--highlight) / 0.1) 100%)
+                          `,
+                        } as React.CSSProperties
+                      }
+                      className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl border border-transparent text-center cursor-pointer mx-auto
+                      [background:padding-box_var(--bg-color),border-box_var(--border-color)]"
                     >
-                      <EnhancedButton
-                        variant="gradient"
-                        size="xl"
-                        glow
-                        onClick={openConnectModal}
-                        icon={<ArrowRight className="w-6 h-6" />}
-                        iconPosition="right"
+                      <motion.span
+                        className="inline-block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold text-xl"
+                        animate={{
+                          backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+                        }}
+                        transition={{
+                          duration: 5,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                        style={{ backgroundSize: "200% 200%" }}
                       >
-                        <motion.span
-                          className="inline-block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold"
-                          animate={{
-                            backgroundPosition: [
-                              "0% 50%",
-                              "100% 50%",
-                              "0% 50%",
-                            ],
-                          }}
-                          transition={{
-                            duration: 5,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                          style={{ backgroundSize: "200% 200%" }}
-                        >
-                          Start Protecting Your Wallet
-                        </motion.span>
-                      </EnhancedButton>
-                    </motion.div>
+                        Start Protecting Your Wallet
+                      </motion.span>
+                      <ArrowRight className="w-6 h-6 text-white" />
+                    </motion.button>
                   );
                 }}
               </ConnectButton.Custom>
-            </motion.div>
-
-            {/* Stats Section */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
-            >
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.9 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  className="relative group"
-                >
-                  <div className="glass-card p-6 text-center transition-all duration-300 group-hover:shadow-neon-blue">
-                    <div className="flex justify-center mb-3 text-cyan-400 group-hover:text-cyan-300 transition-colors">
-                      {stat.icon}
-                    </div>
-                    <div className="text-3xl font-bold text-white mb-1">
-                      {stat.value}
-                    </div>
-                    <div className="text-sm text-gray-400">{stat.label}</div>
-                  </div>
-                </motion.div>
-              ))}
             </motion.div>
           </motion.div>
         </div>
@@ -713,37 +666,47 @@ export default function EnhancedLandingPage() {
                       {({ openConnectModal, mounted }) => {
                         if (!mounted) return null;
                         return (
-                          <motion.div
+                          <motion.button
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
+                            onClick={openConnectModal}
+                            style={
+                              {
+                                "--background": "30 41 59",
+                                "--highlight": "255 255 255",
+                                "--bg-color":
+                                  "linear-gradient(rgb(var(--background)), rgb(var(--background)))",
+                                "--border-color": `linear-gradient(145deg,
+                                  rgb(var(--highlight)) 0%,
+                                  rgb(var(--highlight) / 0.3) 33.33%,
+                                  rgb(var(--highlight) / 0.14) 66.67%,
+                                  rgb(var(--highlight) / 0.1) 100%)
+                                `,
+                              } as React.CSSProperties
+                            }
+                            className="flex items-center justify-center gap-3 px-8 py-4 rounded-xl border border-transparent text-center cursor-pointer mx-auto
+                            [background:padding-box_var(--bg-color),border-box_var(--border-color)]"
                           >
-                            <EnhancedButton
-                              variant="gradient"
-                              size="xl"
-                              glow
-                              onClick={openConnectModal}
-                              icon={<Shield className="w-6 h-6" />}
+                            <Shield className="w-6 h-6 text-white" />
+                            <motion.span
+                              className="inline-block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold text-xl"
+                              animate={{
+                                backgroundPosition: [
+                                  "0% 50%",
+                                  "100% 50%",
+                                  "0% 50%",
+                                ],
+                              }}
+                              transition={{
+                                duration: 5,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
+                              style={{ backgroundSize: "200% 200%" }}
                             >
-                              <motion.span
-                                className="inline-block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold"
-                                animate={{
-                                  backgroundPosition: [
-                                    "0% 50%",
-                                    "100% 50%",
-                                    "0% 50%",
-                                  ],
-                                }}
-                                transition={{
-                                  duration: 5,
-                                  repeat: Infinity,
-                                  ease: "linear",
-                                }}
-                                style={{ backgroundSize: "200% 200%" }}
-                              >
-                                Get Started Now
-                              </motion.span>
-                            </EnhancedButton>
-                          </motion.div>
+                              Get Started Now
+                            </motion.span>
+                          </motion.button>
                         );
                       }}
                     </ConnectButton.Custom>
