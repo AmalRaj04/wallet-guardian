@@ -159,25 +159,29 @@ export class RiskEngine {
         try {
           const sourceData =
             await BlockscoutAPI.getContractSource(contractAddress);
-          const auditResult = await HardhatAnalyzer.analyzeContract(
-            contractAddress,
-            "",
-            sourceData.SourceCode
-          );
 
-          if (auditResult.score >= 80) {
-            badges.push({
-              type: "audited",
-              label: "Secure Code",
-              description: `Security score: ${auditResult.score}/100`,
-              icon: "🔒",
-              color: "green",
-            });
-          } else if (auditResult.score < 60) {
-            score += 15;
-            warnings.push(
-              `Contract has security vulnerabilities (score: ${auditResult.score}/100)`
+          // Only analyze if we got source data
+          if (sourceData && sourceData.SourceCode) {
+            const auditResult = await HardhatAnalyzer.analyzeContract(
+              contractAddress,
+              "",
+              sourceData.SourceCode
             );
+
+            if (auditResult.score >= 80) {
+              badges.push({
+                type: "audited",
+                label: "Secure Code",
+                description: `Security score: ${auditResult.score}/100`,
+                icon: "🔒",
+                color: "green",
+              });
+            } else if (auditResult.score < 60) {
+              score += 15;
+              warnings.push(
+                `Contract has security vulnerabilities (score: ${auditResult.score}/100)`
+              );
+            }
           }
         } catch (error) {
           console.error("Error analyzing contract:", error);
@@ -265,7 +269,7 @@ export class RiskEngine {
       // Get contract creation transaction
       const sourceData = await BlockscoutAPI.getContractSource(contractAddress);
 
-      if (sourceData.ContractName) {
+      if (sourceData && sourceData.ContractName) {
         // Contract has been around for a while
         badges.push({
           type: "established",

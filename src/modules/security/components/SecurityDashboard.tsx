@@ -1,32 +1,71 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { Shield, AlertTriangle, CheckCircle, TrendingDown, Activity } from 'lucide-react';
-import GlassCard from '@/components/ui/GlassCard';
-import { usePortfolioRisk } from '@/hooks/usePortfolioRisk';
-import { useRealTimeMonitoring } from '@/hooks/useRealTimeMonitoring';
-import { Token } from '@/types';
+import { motion } from "framer-motion";
+import {
+  Shield,
+  AlertTriangle,
+  CheckCircle,
+  TrendingDown,
+  Activity,
+} from "lucide-react";
+import GlassCard from "@/components/ui/GlassCard";
+import { usePortfolioRisk } from "@/hooks/usePortfolioRisk";
+import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
+import { Token } from "@/types";
 
 interface SecurityDashboardProps {
   tokens: Token[];
 }
 
 export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
-  const { overallRisk, category, color, highRiskTokens, safeTokens, isCalculating } = usePortfolioRisk(tokens);
-  const { threatsBlocked, fundsProtected, isMonitoring } = useRealTimeMonitoring();
+  const {
+    overallRisk,
+    category,
+    color,
+    highRiskTokens,
+    safeTokens,
+    isCalculating,
+  } = usePortfolioRisk(tokens);
+  const {
+    threatsBlocked,
+    fundsProtected,
+    isMonitoring,
+    startMonitoring,
+    stopMonitoring,
+  } = useRealTimeMonitoring();
 
   const getRiskColor = () => {
     switch (color) {
-      case 'green':
-        return { bg: 'bg-green-500/20', text: 'text-green-400', border: 'border-green-500/30' };
-      case 'yellow':
-        return { bg: 'bg-yellow-500/20', text: 'text-yellow-400', border: 'border-yellow-500/30' };
-      case 'orange':
-        return { bg: 'bg-orange-500/20', text: 'text-orange-400', border: 'border-orange-500/30' };
-      case 'red':
-        return { bg: 'bg-red-500/20', text: 'text-red-400', border: 'border-red-500/30' };
+      case "green":
+        return {
+          bg: "bg-green-500/20",
+          text: "text-green-400",
+          border: "border-green-500/30",
+        };
+      case "yellow":
+        return {
+          bg: "bg-yellow-500/20",
+          text: "text-yellow-400",
+          border: "border-yellow-500/30",
+        };
+      case "orange":
+        return {
+          bg: "bg-orange-500/20",
+          text: "text-orange-400",
+          border: "border-orange-500/30",
+        };
+      case "red":
+        return {
+          bg: "bg-red-500/20",
+          text: "text-red-400",
+          border: "border-red-500/30",
+        };
       default:
-        return { bg: 'bg-gray-500/20', text: 'text-gray-400', border: 'border-gray-500/30' };
+        return {
+          bg: "bg-gray-500/20",
+          text: "text-gray-400",
+          border: "border-gray-500/30",
+        };
     }
   };
 
@@ -44,29 +83,38 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             <div className="flex items-center justify-center mb-4">
               <Shield className={`w-16 h-16 ${riskColor.text}`} />
             </div>
-            <h2 className="text-2xl font-bold mb-2">Portfolio Security Score</h2>
+            <h2 className="text-2xl font-bold mb-2">
+              Portfolio Security Score
+            </h2>
             {isCalculating ? (
-              <div className="text-4xl font-bold text-gray-400 mb-2">Calculating...</div>
+              <div className="text-4xl font-bold text-gray-400 mb-2">
+                Calculating...
+              </div>
             ) : (
               <>
                 <div className={`text-6xl font-bold ${riskColor.text} mb-2`}>
                   {Math.round(overallRisk)}
                 </div>
-                <div className={`text-xl font-semibold ${riskColor.text} uppercase mb-4`}>
+                <div
+                  className={`text-xl font-semibold ${riskColor.text} uppercase mb-4`}
+                >
                   {category}
                 </div>
               </>
             )}
-            
+
             {/* Risk Bar */}
             <div className="w-full max-w-md mx-auto">
               <div className="w-full bg-gray-700 rounded-full h-4">
                 <div
                   className={`h-4 rounded-full transition-all duration-500 ${
-                    color === 'green' ? 'bg-green-500' :
-                    color === 'yellow' ? 'bg-yellow-500' :
-                    color === 'orange' ? 'bg-orange-500' :
-                    'bg-red-500'
+                    color === "green"
+                      ? "bg-green-500"
+                      : color === "yellow"
+                        ? "bg-yellow-500"
+                        : color === "orange"
+                          ? "bg-orange-500"
+                          : "bg-red-500"
                   }`}
                   style={{ width: `${overallRisk}%` }}
                 />
@@ -87,15 +135,27 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <GlassCard className="p-6">
+          <GlassCard
+            className={`p-6 cursor-pointer transition-all ${!isMonitoring ? "hover:border-neon-blue/50" : ""}`}
+            onClick={() =>
+              isMonitoring ? stopMonitoring() : startMonitoring(tokens)
+            }
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Monitoring Status</p>
-                <p className={`text-xl font-bold ${isMonitoring ? 'text-green-400' : 'text-gray-400'}`}>
-                  {isMonitoring ? 'Active' : 'Inactive'}
+                <p
+                  className={`text-xl font-bold ${isMonitoring ? "text-green-400" : "text-orange-400"}`}
+                >
+                  {isMonitoring ? "Active" : "Paused"}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {isMonitoring ? "Click to stop" : "Click to start"}
                 </p>
               </div>
-              <Activity className={`w-8 h-8 ${isMonitoring ? 'text-green-400' : 'text-gray-400'}`} />
+              <Activity
+                className={`w-8 h-8 ${isMonitoring ? "text-green-400 animate-pulse" : "text-orange-400"}`}
+              />
             </div>
           </GlassCard>
         </motion.div>
@@ -109,7 +169,9 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Threats Blocked</p>
-                <p className="text-xl font-bold text-green-400">{threatsBlocked}</p>
+                <p className="text-xl font-bold text-green-400">
+                  {threatsBlocked}
+                </p>
               </div>
               <Shield className="w-8 h-8 text-green-400" />
             </div>
@@ -125,7 +187,9 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Funds Protected</p>
-                <p className="text-xl font-bold text-neon-blue">${fundsProtected.toFixed(2)}</p>
+                <p className="text-xl font-bold text-neon-blue">
+                  ${fundsProtected.toFixed(2)}
+                </p>
               </div>
               <TrendingDown className="w-8 h-8 text-neon-blue" />
             </div>
@@ -141,7 +205,9 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">High Risk Assets</p>
-                <p className="text-xl font-bold text-red-400">{highRiskTokens.length}</p>
+                <p className="text-xl font-bold text-red-400">
+                  {highRiskTokens.length}
+                </p>
               </div>
               <AlertTriangle className="w-8 h-8 text-red-400" />
             </div>
@@ -160,7 +226,9 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-green-500/10 rounded-lg border border-green-500/30">
               <CheckCircle className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-green-400">{safeTokens.length}</p>
+              <p className="text-2xl font-bold text-green-400">
+                {safeTokens.length}
+              </p>
               <p className="text-sm text-gray-400">Safe Assets</p>
             </div>
             <div className="text-center p-4 bg-yellow-500/10 rounded-lg border border-yellow-500/30">
@@ -172,7 +240,9 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             </div>
             <div className="text-center p-4 bg-red-500/10 rounded-lg border border-red-500/30">
               <AlertTriangle className="w-8 h-8 text-red-400 mx-auto mb-2" />
-              <p className="text-2xl font-bold text-red-400">{highRiskTokens.length}</p>
+              <p className="text-2xl font-bold text-red-400">
+                {highRiskTokens.length}
+              </p>
               <p className="text-sm text-gray-400">High Risk</p>
             </div>
           </div>
@@ -192,7 +262,8 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               <div>
                 <h4 className="font-bold text-red-400 mb-2">Action Required</h4>
                 <p className="text-gray-300 mb-3">
-                  You have {highRiskTokens.length} high-risk asset{highRiskTokens.length > 1 ? 's' : ''} in your portfolio.
+                  You have {highRiskTokens.length} high-risk asset
+                  {highRiskTokens.length > 1 ? "s" : ""} in your portfolio.
                 </p>
                 <button className="px-4 py-2 bg-neon-blue/20 text-neon-blue rounded-lg hover:bg-neon-blue/30 transition-colors">
                   Secure My Assets

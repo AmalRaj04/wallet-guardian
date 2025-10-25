@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  Brain, 
-  TrendingUp, 
-  TrendingDown, 
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Brain,
+  TrendingUp,
+  TrendingDown,
   AlertTriangle,
   CheckCircle,
   RefreshCw,
-  Zap
-} from 'lucide-react';
-import { Coin, AIResponse } from '@/types';
-import { GroqAI } from '@/lib/groq';
-import GlassCard from '@/components/ui/GlassCard';
-import { LoadingState } from '@/components/ui/LoadingState';
+  Zap,
+} from "lucide-react";
+import { Coin, AIResponse } from "@/types";
+import { GroqAI } from "@/lib/groq";
+import GlassCard from "@/components/ui/GlassCard";
+import { LoadingState } from "@/components/ui/LoadingState";
 
 interface AIAnalysisProps {
   coin: Coin;
@@ -34,13 +34,13 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
   const analyzeCoins = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const aiAnalysis = await GroqAI.analyzeCoin(coin);
       setAnalysis(aiAnalysis);
     } catch (err) {
-      console.error('Error analyzing coin:', err);
-      setError('Failed to generate AI analysis. Please try again.');
+      console.error("Error analyzing coin:", err);
+      setError("Failed to generate AI analysis. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -48,11 +48,11 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
 
   const getRecommendationIcon = (recommendation?: string) => {
     switch (recommendation) {
-      case 'buy':
+      case "buy":
         return <TrendingUp className="w-5 h-5 text-green-400" />;
-      case 'sell':
+      case "sell":
         return <TrendingDown className="w-5 h-5 text-red-400" />;
-      case 'hold':
+      case "hold":
         return <CheckCircle className="w-5 h-5 text-yellow-400" />;
       default:
         return <AlertTriangle className="w-5 h-5 text-gray-400" />;
@@ -61,31 +61,31 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
 
   const getRecommendationColor = (recommendation?: string) => {
     switch (recommendation) {
-      case 'buy':
-        return 'text-green-400 bg-green-400/10 border-green-400/30';
-      case 'sell':
-        return 'text-red-400 bg-red-400/10 border-red-400/30';
-      case 'hold':
-        return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30';
+      case "buy":
+        return "text-green-400 bg-green-400/10 border-green-400/30";
+      case "sell":
+        return "text-red-400 bg-red-400/10 border-red-400/30";
+      case "hold":
+        return "text-yellow-400 bg-yellow-400/10 border-yellow-400/30";
       default:
-        return 'text-gray-400 bg-gray-400/10 border-gray-400/30';
+        return "text-gray-400 bg-gray-400/10 border-gray-400/30";
     }
   };
 
   const getScoreColor = (score?: number) => {
-    if (!score) return 'text-gray-400';
-    if (score >= 8) return 'text-green-400';
-    if (score >= 6) return 'text-yellow-400';
-    if (score >= 4) return 'text-orange-400';
-    return 'text-red-400';
+    if (!score) return "text-gray-400";
+    if (score >= 8) return "text-green-400";
+    if (score >= 6) return "text-yellow-400";
+    if (score >= 4) return "text-orange-400";
+    return "text-red-400";
   };
 
   const getScoreLabel = (score?: number) => {
-    if (!score) return 'No Score';
-    if (score >= 8) return 'Strong';
-    if (score >= 6) return 'Moderate';
-    if (score >= 4) return 'Weak';
-    return 'Poor';
+    if (!score) return "No Score";
+    if (score >= 8) return "Strong";
+    if (score >= 6) return "Moderate";
+    if (score >= 4) return "Weak";
+    return "Poor";
   };
 
   return (
@@ -96,13 +96,13 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
           <Brain className="w-6 h-6 mr-2 text-neon-purple" />
           AI Analysis
         </h2>
-        
+
         <button
           onClick={analyzeCoins}
           disabled={isLoading}
           className="p-2 rounded-lg bg-neon-purple/20 hover:bg-neon-purple/30 border border-neon-purple/30 text-neon-purple transition-all duration-300 disabled:opacity-50"
         >
-          <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
         </button>
       </div>
 
@@ -142,10 +142,14 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
           {analysis.score && (
             <div className="text-center">
               <div className="text-sm text-gray-400 mb-2">Investment Score</div>
-              <div className={`text-4xl font-bold ${getScoreColor(analysis.score)}`}>
+              <div
+                className={`text-4xl font-bold ${getScoreColor(analysis.score)}`}
+              >
                 {analysis.score}/10
               </div>
-              <div className={`text-sm font-medium ${getScoreColor(analysis.score)}`}>
+              <div
+                className={`text-sm font-medium ${getScoreColor(analysis.score)}`}
+              >
                 {getScoreLabel(analysis.score)}
               </div>
             </div>
@@ -171,9 +175,16 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
                 Detailed Analysis
               </h3>
               <div className="bg-black/20 rounded-lg p-4">
-                <p className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-                  {analysis.reason}
-                </p>
+                <div className="text-gray-300 leading-relaxed space-y-3">
+                  {analysis.reason.split("\n\n").map(
+                    (paragraph, idx) =>
+                      paragraph.trim() && (
+                        <p key={idx} className="whitespace-pre-wrap">
+                          {paragraph}
+                        </p>
+                      )
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -208,7 +219,10 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
             <div className="flex items-start space-x-2">
               <AlertTriangle className="w-4 h-4 text-yellow-400 mt-0.5 flex-shrink-0" />
               <div className="text-xs text-yellow-400">
-                <strong>Disclaimer:</strong> This AI analysis is for informational purposes only and should not be considered financial advice. Always do your own research before making investment decisions.
+                <strong>Disclaimer:</strong> This AI analysis is for
+                informational purposes only and should not be considered
+                financial advice. Always do your own research before making
+                investment decisions.
               </div>
             </div>
           </div>
@@ -219,9 +233,7 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
           <p className="text-gray-400 mb-4">
             Select a cryptocurrency to get AI-powered investment analysis
           </p>
-          <div className="text-xs text-gray-500">
-            Powered by Groq AI
-          </div>
+          <div className="text-xs text-gray-500">Powered by Groq AI</div>
         </div>
       )}
     </GlassCard>

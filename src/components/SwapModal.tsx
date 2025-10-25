@@ -241,6 +241,25 @@ export default function SwapModal({
               </button>
             </div>
 
+            {/* Testnet Warning */}
+            {chainId === 11155111 && (
+              <div className="mb-4 p-4 bg-orange-500/10 border border-orange-500/30 rounded-lg">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
+                  <div className="text-sm">
+                    <div className="font-semibold text-orange-400 mb-1">
+                      Testnet Not Supported
+                    </div>
+                    <div className="text-gray-300">
+                      1inch API only works on Ethereum Mainnet. This swap
+                      feature is unavailable on Sepolia testnet. Switch to
+                      mainnet to use swaps.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* 1inch Badge */}
             <div className="mb-4 flex items-center justify-center gap-2 text-sm text-gray-400">
               <Zap className="w-4 h-4 text-neon-blue" />

@@ -33,14 +33,29 @@ export function useRealTimeMonitoring() {
    */
   const startMonitoring = useCallback(
     async (tokens: Token[] = []) => {
+      console.log("🔍 startMonitoring called", {
+        address,
+        isConnected,
+        tokenCount: tokens.length,
+        currentlyMonitoring: state.isMonitoring,
+      });
+
       if (!address || !isConnected) {
-        console.warn("Wallet not connected", { address, isConnected });
+        console.warn("❌ Wallet not connected - cannot start monitoring", {
+          address,
+          isConnected,
+        });
+        toast.error("Please connect your wallet first", {
+          icon: "⚠️",
+          duration: 3000,
+        });
         return;
       }
 
       // Prevent duplicate monitoring
       if (state.isMonitoring) {
-        console.log("Monitoring already active");
+        console.log("✅ Monitoring already active");
+        toast("Monitoring is already active", { icon: "✅" });
         return;
       }
 

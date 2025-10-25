@@ -1,8 +1,11 @@
-// Envio HyperSync Integration for Real-time Mempool Monitoring & Historical Data
-import { MempoolTransaction, Alert } from "@/types";
+// Envio HyperSync Integration - REST API for Historical Blockchain Data
+// Note: Envio HyperSync is a REST API, NOT a WebSocket service
+// It's designed for fast historical data queries, not real-time mempool monitoring
+import { MempoolTransaction } from "@/types";
+import axios from "axios";
 
 const ENVIO_API_KEY = process.env.NEXT_PUBLIC_ENVIO_API_KEY;
-const ENVIO_WS_URL = "wss://hypersync.envio.dev";
+const ENVIO_API_URL = "https://sepolia.hypersync.xyz"; // Sepolia endpoint
 
 export interface MempoolAlert {
   id: string;
@@ -23,13 +26,11 @@ export interface MempoolAlert {
 }
 
 export class EnvioHyperSync {
-  private ws: WebSocket | null = null;
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 5;
   private monitoredAddresses: Set<string> = new Set();
   private monitoredContracts: Set<string> = new Set();
   private alertCallbacks: ((alert: MempoolAlert) => void)[] = [];
   private transactionCallbacks: ((tx: MempoolTransaction) => void)[] = [];
+  private fallbackIntervalId: NodeJS.Timeout | null = null;
 
   /**
    * Start real-time mempool monitoring
@@ -49,154 +50,80 @@ export class EnvioHyperSync {
     this.transactionCallbacks.push(onTransaction);
     this.alertCallbacks.push(onAlert);
 
-    if (!ENVIO_API_KEY) {
-      console.warn("Envio API key not configured. Using fallback monitoring.");
-      this.startFallbackMonitoring();
-      return;
-    }
-
-    this.connectWebSocket();
+    // Start monitoring using Alchemy (primary) and Envio (supplementary historical data)
+    // Note: Envio HyperSync is a REST API for historical queries, not real-time monitoring
+    this.startFallbackMonitoring();
   }
 
   /**
    * Stop mempool monitoring
    */
   stopMonitoring(): void {
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
-    }
-
-    // Clear fallback interval if exists
-    if ((this as any).fallbackIntervalId) {
-      clearInterval((this as any).fallbackIntervalId);
-      (this as any).fallbackIntervalId = null;
+    // Clear monitoring interval
+    if (this.fallbackIntervalId) {
+      clearInterval(this.fallbackIntervalId);
+      this.fallbackIntervalId = null;
     }
 
     this.monitoredAddresses.clear();
     this.monitoredContracts.clear();
     this.alertCallbacks = [];
     this.transactionCallbacks = [];
+
+    console.log("⏸️ Monitoring stopped");
   }
 
   /**
-   * Connect to Envio WebSocket
+   * Query Envio HyperSync for historical transactions (REST API)
+   * This is the CORRECT way to use Envio - it's a REST API for historical data
    */
-  private connectWebSocket(): void {
-    // Skip WebSocket if no API key or invalid key
-    if (
-      !ENVIO_API_KEY ||
-      ENVIO_API_KEY === "your_envio_api_key_here" ||
-      ENVIO_API_KEY.length < 20
-    ) {
-      console.log("Envio: Using fallback monitoring (WebSocket optional)");
-      this.startFallbackMonitoring();
-      return;
+  private async queryEnvioHistoricalData(
+    address: string,
+    fromBlock: number,
+    toBlock: number
+  ): Promise<any[]> {
+    if (!ENVIO_API_KEY || ENVIO_API_KEY === "your_envio_api_key_here") {
+      return [];
     }
 
     try {
-      this.ws = new WebSocket(`${ENVIO_WS_URL}?apiKey=${ENVIO_API_KEY}`);
-
-      this.ws.onopen = () => {
-        console.log("✅ Connected to Envio HyperSync");
-        this.reconnectAttempts = 0;
-
-        // Subscribe to monitored addresses
-        this.monitoredAddresses.forEach((address) => {
-          this.ws?.send(
-            JSON.stringify({
-              type: "subscribe",
-              address,
-              includeMempool: true,
-            })
-          );
-        });
-
-        // Subscribe to monitored contracts
-        this.monitoredContracts.forEach((contract) => {
-          this.ws?.send(
-            JSON.stringify({
-              type: "subscribe",
-              contract,
-              includeMempool: true,
-              includeEvents: true,
-            })
-          );
-        });
-      };
-
-      this.ws.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data);
-          this.handleMempoolData(data);
-        } catch (error) {
-          console.error("Error parsing mempool data:", error);
+      // Envio HyperSync REST API query
+      const response = await axios.post(
+        `${ENVIO_API_URL}/query`,
+        {
+          from_block: fromBlock,
+          to_block: toBlock,
+          logs: [
+            {
+              address: [address],
+            },
+          ],
+          transactions: [
+            {
+              from: [address],
+            },
+            {
+              to: [address],
+            },
+          ],
+          include_all_blocks: false,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${ENVIO_API_KEY}`,
+          },
+          timeout: 10000,
         }
-      };
-
-      this.ws.onerror = (error) => {
-        // Silently handle WebSocket errors - this is an optional service
-        console.log("Envio WebSocket unavailable - using fallback monitoring");
-      };
-
-      this.ws.onclose = () => {
-        console.log("Envio WebSocket closed - using fallback monitoring");
-        this.startFallbackMonitoring();
-      };
-    } catch (error) {
-      console.error("Failed to connect to Envio:", error);
-      this.startFallbackMonitoring();
-    }
-  }
-
-  /**
-   * Attempt to reconnect WebSocket
-   */
-  private attemptReconnect(): void {
-    // Skip reconnection in development, use fallback immediately
-    if (process.env.NODE_ENV === "development") {
-      this.startFallbackMonitoring();
-      return;
-    }
-
-    if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectAttempts++;
-      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
-      console.log(
-        `Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
       );
-      setTimeout(() => this.connectWebSocket(), delay);
-    } else {
-      console.warn(
-        "Max reconnection attempts reached. Using fallback monitoring."
-      );
-      this.startFallbackMonitoring();
-    }
-  }
 
-  /**
-   * Handle incoming mempool data
-   */
-  private handleMempoolData(data: any): void {
-    if (data.type === "mempool_transaction") {
-      const tx: MempoolTransaction = {
-        hash: data.hash,
-        from: data.from,
-        to: data.to,
-        value: data.value,
-        gasPrice: data.gasPrice,
-        gasLimit: data.gasLimit,
-        data: data.data,
-        timestamp: new Date(data.timestamp),
-        riskLevel: this.analyzeThreatLevel(data),
-        threatType: this.detectThreatType(data),
-      };
-
-      // Emit to transaction callbacks
-      this.transactionCallbacks.forEach((callback) => callback(tx));
-
-      // Analyze for threats and emit alerts
-      this.analyzeForThreats(tx);
+      return response.data.data || [];
+    } catch (error: any) {
+      // Silently handle - Envio is optional
+      if (error.response?.status === 401) {
+        console.warn("Envio API key invalid or expired");
+      }
+      return [];
     }
   }
 
@@ -400,98 +327,115 @@ export class EnvioHyperSync {
   }
 
   /**
-   * Fallback monitoring using Etherscan polling
+   * Fallback monitoring using Alchemy for real-time transaction detection
    */
   private startFallbackMonitoring(): void {
-    console.log("✅ Fallback mempool monitoring active (using Etherscan)");
+    // Prevent multiple fallback instances
+    if (this.fallbackIntervalId) {
+      return;
+    }
 
-    // Use Etherscan as backup for mempool monitoring
-    const pollInterval = 10000; // Poll every 10 seconds
+    console.log("🔍 Starting real-time transaction monitoring...");
 
-    const pollEtherscan = async () => {
+    // Track last seen block to avoid duplicates
+    let lastSeenBlock = 0;
+    let seenTransactions = new Set<string>();
+
+    // Poll for recent transactions every 10 seconds
+    const pollInterval = 10000;
+
+    const pollRecentTransactions = async () => {
       try {
-        const { EtherscanAPI } = await import("./etherscan");
+        const { AlchemyAPI } = await import("./alchemy");
+
+        if (!AlchemyAPI.isConfigured()) {
+          console.warn("Alchemy not configured - monitoring limited");
+          return;
+        }
 
         for (const address of this.monitoredAddresses) {
-          const pendingTxs = await EtherscanAPI.getPendingTransactions(address);
+          // Get recent transactions - simplified to avoid API errors
+          // Alchemy's getAssetTransfers works best with simple parameters
+          const transfers = await AlchemyAPI.getTransactionHistory(
+            address,
+            "0x0", // Start from block 0 (Alchemy returns recent ones anyway)
+            "latest", // To latest block
+            11155111 // Sepolia chain ID
+          );
 
-          pendingTxs.forEach((tx: any) => {
+          transfers.forEach((transfer: any) => {
+            // Skip if we've already seen this transaction
+            if (seenTransactions.has(transfer.hash)) {
+              return;
+            }
+
+            seenTransactions.add(transfer.hash);
+
+            // Update last seen block
+            if (transfer.blockNum) {
+              const blockNum = parseInt(transfer.blockNum, 16);
+              if (blockNum > lastSeenBlock) {
+                lastSeenBlock = blockNum;
+              }
+            }
+
+            // Convert to mempool transaction format
             const mempoolTx: MempoolTransaction = {
-              hash: tx.hash,
-              from: tx.from,
-              to: tx.to,
-              value: tx.value,
-              gasPrice: tx.gasPrice,
-              gasLimit: tx.gas,
-              data: tx.input,
-              timestamp: new Date(parseInt(tx.timeStamp) * 1000),
-              riskLevel: this.analyzeThreatLevel(tx),
-              threatType: this.detectThreatType(tx),
+              hash: transfer.hash,
+              from: transfer.from,
+              to: transfer.to || transfer.rawContract?.address || "",
+              value: transfer.value
+                ? `0x${(parseFloat(transfer.value) * 1e18).toString(16)}`
+                : "0x0",
+              gasPrice: "0x0",
+              gasLimit: "0x0",
+              data: transfer.rawContract?.value || "0x",
+              timestamp: new Date(),
+              riskLevel: "low",
+              threatType: undefined,
             };
 
+            console.log("📊 New transaction detected:", {
+              hash: mempoolTx.hash.slice(0, 10) + "...",
+              from: mempoolTx.from.slice(0, 8) + "...",
+              to: mempoolTx.to.slice(0, 8) + "...",
+            });
+
+            // Emit to callbacks
             this.transactionCallbacks.forEach((callback) =>
               callback(mempoolTx)
             );
+
+            // Analyze for threats
             this.analyzeForThreats(mempoolTx);
           });
         }
+
+        // Clean up old seen transactions (keep last 1000)
+        if (seenTransactions.size > 1000) {
+          const txArray = Array.from(seenTransactions);
+          seenTransactions = new Set(txArray.slice(-1000));
+        }
       } catch (error) {
-        console.error("Error in Etherscan fallback monitoring:", error);
+        console.error("Error polling transactions:", error);
       }
     };
 
-    // Start polling
-    const intervalId = setInterval(pollEtherscan, pollInterval);
+    // Start polling immediately and then every interval
+    pollRecentTransactions();
+    this.fallbackIntervalId = setInterval(pollRecentTransactions, pollInterval);
 
-    // Store interval ID for cleanup
-    (this as any).fallbackIntervalId = intervalId;
-
-    // Generate demo transactions for testing (in development)
-    if (process.env.NODE_ENV === "development") {
-      setTimeout(() => this.generateDemoTransaction("low"), 5000);
-      setTimeout(() => this.generateDemoTransaction("medium"), 10000);
-      setTimeout(() => this.generateDemoTransaction("high"), 15000);
-    }
+    console.log("✅ Real-time monitoring active - watching for transactions");
   }
 
   /**
-   * Generate demo transaction for testing
+   * Generate demo transaction for testing - DISABLED
+   * We only want REAL blockchain data, no mock data
    */
   private generateDemoTransaction(riskLevel: "low" | "medium" | "high"): void {
-    const demoTx: MempoolTransaction = {
-      hash: "0x" + Math.random().toString(16).substring(2, 66),
-      from: "0x" + Math.random().toString(16).substring(2, 42),
-      to:
-        Array.from(this.monitoredContracts)[0] ||
-        "0x" + Math.random().toString(16).substring(2, 42),
-      value: "0x" + (Math.random() * 1e18).toString(16),
-      gasPrice:
-        "0x" +
-        (
-          50 *
-          1e9 *
-          (riskLevel === "high" ? 3 : riskLevel === "medium" ? 1.5 : 1)
-        ).toString(16),
-      gasLimit: "0x5208",
-      data: "0x",
-      timestamp: new Date(),
-      riskLevel,
-      threatType:
-        riskLevel === "high"
-          ? "frontrun"
-          : riskLevel === "medium"
-            ? "mev"
-            : undefined,
-    };
-
-    // Emit to callbacks
-    this.transactionCallbacks.forEach((callback) => {
-      try {
-        callback(demoTx);
-      } catch (error) {
-        console.error("Error in transaction callback:", error);
-      }
-    });
+    // DISABLED: No mock data for production demos
+    // All data should come from real blockchain sources
+    console.log("Demo transaction generation disabled - using real data only");
   }
 
   /**

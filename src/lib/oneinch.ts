@@ -8,7 +8,8 @@ import { parseUnits, formatUnits } from "viem";
 import { Token } from "@/types";
 
 const ONEINCH_API_KEY = process.env.NEXT_PUBLIC_1INCH_API_KEY;
-const ONEINCH_API_BASE = "https://api.1inch.dev/swap/v6.0";
+// Use our Next.js API proxy to avoid CORS issues
+const ONEINCH_API_BASE = "/api/oneinch";
 
 // Token addresses
 export const TOKEN_ADDRESSES = {
@@ -49,7 +50,7 @@ export class OneInchService {
   private static apiKey = ONEINCH_API_KEY;
 
   /**
-   * Make authenticated request to 1inch API
+   * Make authenticated request to 1inch API via our proxy
    */
   private static async request<T>(
     chainId: number,
@@ -60,18 +61,27 @@ export class OneInchService {
       throw new Error("1inch API key not configured");
     }
 
-    const queryParams = new URLSearchParams();
-    Object.entries(params).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        queryParams.append(key, value.toString());
+    // Add chainId and endpoint to params for our proxy
+    const queryParams = new URLSearchParams({
+      chainId: chainId.toString(),
+      endpoint: endpoint,
+      ...params,
+    });
+
+    // Remove undefined/null values
+    Array.from(queryParams.keys()).forEach((key) => {
+      if (
+        queryParams.get(key) === "undefined" ||
+        queryParams.get(key) === "null"
+      ) {
+        queryParams.delete(key);
       }
     });
 
-    const url = `${this.baseUrl}/${chainId}${endpoint}?${queryParams.toString()}`;
+    const url = `${this.baseUrl}?${queryParams.toString()}`;
 
     const response = await fetch(url, {
       headers: {
-        Authorization: `Bearer ${this.apiKey}`,
         Accept: "application/json",
       },
     });

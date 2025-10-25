@@ -187,16 +187,64 @@ export default function ComprehensiveDashboard() {
               </span>
             </div>
           </div>
-          {isMonitoring && (
-            <div className="px-4 py-2 rounded-lg bg-neon-blue/20 border border-neon-blue/50">
+
+          {/* Monitoring Control Button */}
+          {isMonitoring ? (
+            <button
+              onClick={stopMonitoring}
+              className="px-4 py-2 rounded-lg bg-orange-500/20 border border-orange-500/50 hover:bg-orange-500/30 transition-colors"
+            >
               <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-neon-blue animate-pulse" />
-                <span className="text-sm text-neon-blue">Monitoring</span>
+                <Eye className="w-4 h-4 text-orange-400" />
+                <span className="text-sm text-orange-400">Stop Monitoring</span>
               </div>
-            </div>
+            </button>
+          ) : (
+            <button
+              onClick={() => startMonitoring(portfolio)}
+              className="px-4 py-2 rounded-lg bg-neon-blue/20 border border-neon-blue/50 hover:bg-neon-blue/30 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <Eye className="w-4 h-4 text-neon-blue" />
+                <span className="text-sm text-neon-blue">Start Monitoring</span>
+              </div>
+            </button>
           )}
         </div>
       </div>
+
+      {/* Monitoring Status Banner */}
+      {!isMonitoring && (
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <GlassCard className="p-6 bg-orange-500/10 border-orange-500/30">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-orange-500/20 flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-orange-400" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-orange-400">
+                    Monitoring Paused
+                  </h3>
+                  <p className="text-sm text-gray-300">
+                    Real-time threat detection is currently inactive. Click
+                    "Start Monitoring" to enable protection.
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => startMonitoring(portfolio)}
+                className="px-6 py-3 bg-neon-blue rounded-lg text-white font-semibold hover:bg-neon-blue/80 transition-colors"
+              >
+                Start Monitoring
+              </button>
+            </div>
+          </GlassCard>
+        </motion.div>
+      )}
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -270,15 +318,22 @@ export default function ComprehensiveDashboard() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <GlassCard className="p-6">
+          <GlassCard
+            className={`p-6 ${!isMonitoring ? "bg-orange-500/5 border-orange-500/30" : ""}`}
+          >
             <div className="flex items-center justify-between mb-4">
-              <Activity className="w-8 h-8 text-purple-400" />
-              <span className="text-sm text-gray-400">Active Alerts</span>
+              <Activity
+                className={`w-8 h-8 ${isMonitoring ? "text-purple-400" : "text-orange-400"}`}
+              />
+              <span className="text-sm text-gray-400">Monitoring Status</span>
             </div>
-            <div className="text-3xl font-bold text-purple-400">
-              {alerts.filter((a) => !a.isRead).length}
+            <div
+              className={`text-3xl font-bold ${isMonitoring ? "text-green-400" : "text-orange-400"}`}
+            >
+              {isMonitoring ? "Active" : "Paused"}
             </div>
             <div className="text-sm text-gray-400 mt-2">
+              {alerts.filter((a) => !a.isRead).length} alerts •{" "}
               {mempoolTransactions.length} mempool txs
             </div>
           </GlassCard>

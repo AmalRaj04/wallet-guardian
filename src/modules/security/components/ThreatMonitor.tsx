@@ -6,8 +6,14 @@ import GlassCard from "@/components/ui/GlassCard";
 import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
 
 export default function ThreatMonitor() {
-  const { mempoolTransactions, threatsBlocked, fundsProtected, isMonitoring } =
-    useRealTimeMonitoring();
+  const {
+    mempoolTransactions,
+    threatsBlocked,
+    fundsProtected,
+    isMonitoring,
+    startMonitoring,
+    stopMonitoring,
+  } = useRealTimeMonitoring();
 
   const recentTransactions = mempoolTransactions.slice(0, 10);
 
@@ -139,9 +145,16 @@ export default function ThreatMonitor() {
             <div className="text-center py-12">
               <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">Monitoring Paused</h3>
-              <p className="text-gray-400">
+              <p className="text-gray-400 mb-6">
                 Connect your wallet to start real-time threat monitoring
               </p>
+              <button
+                onClick={() => startMonitoring([])}
+                className="px-6 py-3 bg-neon-blue rounded-lg text-white font-semibold hover:bg-neon-blue/80 transition-colors inline-flex items-center gap-2"
+              >
+                <Activity className="w-5 h-5" />
+                Start Monitoring
+              </button>
             </div>
           ) : recentTransactions.length === 0 ? (
             <div className="text-center py-12">

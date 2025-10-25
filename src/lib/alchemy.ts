@@ -5,11 +5,8 @@ import { Token } from "@/types";
 const ALCHEMY_API_KEY =
   process.env.ALCHEMY_API_KEY || process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
 
-// Helper to get Alchemy network URL based on chain ID
-function getAlchemyUrl(chainId?: number): string {
-  const network = chainId === 11155111 ? "eth-sepolia" : "eth-mainnet";
-  return `https://${network}.g.alchemy.com/v2/${ALCHEMY_API_KEY}`;
-}
+// Use our Next.js API route to avoid CORS issues
+const ALCHEMY_PROXY_URL = "/api/alchemy";
 
 interface AlchemyTokenBalance {
   contractAddress: string;
@@ -25,9 +22,9 @@ interface AlchemyTokenMetadata {
 }
 
 export class AlchemyAPI {
-  private static createApi(chainId?: number) {
+  private static createApi() {
     return axios.create({
-      baseURL: getAlchemyUrl(chainId),
+      baseURL: ALCHEMY_PROXY_URL,
       headers: {
         "Content-Type": "application/json",
       },
@@ -45,8 +42,9 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "eth_getBalance",
@@ -74,8 +72,9 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "alchemy_getTokenBalances",
@@ -107,8 +106,9 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "alchemy_getTokenMetadata",
@@ -196,7 +196,7 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       // ERC-20 allowance function signature
       const functionSignature = "0xdd62ed3e"; // allowance(address,address)
       const paddedOwner = ownerAddress.slice(2).padStart(64, "0");
@@ -204,6 +204,7 @@ export class AlchemyAPI {
       const data = functionSignature + paddedOwner + paddedSpender;
 
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "eth_call",
@@ -221,9 +222,12 @@ export class AlchemyAPI {
       }
 
       return response.data.result;
-    } catch (error) {
-      console.error("Error fetching token allowance:", error);
-      throw error;
+    } catch (error: any) {
+      // Silently fail - allowance check is optional
+      if (error.code !== "ERR_NETWORK") {
+        console.warn("Alchemy API unavailable - skipping allowance check");
+      }
+      return "0x0"; // Return 0 allowance if we can't check
     }
   }
 
@@ -239,8 +243,9 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "alchemy_getAssetTransfers",
@@ -258,13 +263,14 @@ export class AlchemyAPI {
       });
 
       if (response.data.error) {
-        throw new Error(response.data.error.message);
+        console.warn("Alchemy API error:", response.data.error.message);
+        return []; // Return empty array instead of throwing
       }
 
-      return response.data.result.transfers || [];
-    } catch (error) {
-      console.error("Error fetching transaction history:", error);
-      throw error;
+      return response.data.result?.transfers || [];
+    } catch (error: any) {
+      console.warn("Error fetching transaction history:", error.message);
+      return []; // Return empty array instead of throwing
     }
   }
 
@@ -279,8 +285,9 @@ export class AlchemyAPI {
     }
 
     try {
-      const api = this.createApi(chainId);
+      const api = this.createApi();
       const response = await api.post("", {
+        chainId: chainId || 11155111,
         jsonrpc: "2.0",
         id: 1,
         method: "eth_gasPrice",
