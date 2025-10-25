@@ -124,22 +124,6 @@ export default function EnhancedLandingPage() {
             style={{ opacity, scale }}
             className="max-w-6xl mx-auto text-center"
           >
-            {/* Floating Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 backdrop-blur-sm mb-6"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-              </span>
-              <span className="text-sm font-medium text-cyan-300">
-                AI-Powered Security Platform
-              </span>
-            </motion.div>
-
             {/* Main Heading with Enhanced Animation */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -285,17 +269,6 @@ export default function EnhancedLandingPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-purple-500/10 border border-cyan-500/20 backdrop-blur-sm mb-4"
-              >
-                <span className="text-sm font-medium text-cyan-300">
-                  Complete Protection
-                </span>
-              </motion.div>
               <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-cyan-100 to-white bg-clip-text text-transparent">
                 Complete Security Suite
               </h2>
@@ -419,17 +392,6 @@ export default function EnhancedLandingPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
-                className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-green-500/10 to-red-500/10 border border-green-500/20 backdrop-blur-sm mb-4"
-              >
-                <span className="text-sm font-medium text-green-300">
-                  Smart Risk Detection
-                </span>
-              </motion.div>
               <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-green-100 to-white bg-clip-text text-transparent">
                 Color-Coded Risk System
               </h2>

@@ -191,7 +191,7 @@ export default function TokenList({
       <InteractiveGlassCard
         className="p-12 text-center"
         enableParticles={true}
-        enableTilt={true}
+        enableTilt={false}
         enableMagnetism={false}
         enableBorderGlow={true}
         clickEffect={true}
@@ -218,7 +218,7 @@ export default function TokenList({
       <InteractiveGlassCard
         className="p-4 md:p-6"
         enableParticles={true}
-        enableTilt={true}
+        enableTilt={false}
         enableMagnetism={false}
         enableBorderGlow={true}
         clickEffect={true}
@@ -286,7 +286,7 @@ export default function TokenList({
                   className="group"
                 >
                   {/* Desktop View */}
-                  <div className="hidden lg:grid grid-cols-12 gap-4 p-4 hover:bg-white/5 rounded-lg transition-all duration-200">
+                  <div className="hidden lg:grid grid-cols-12 gap-4 p-4 hover:bg-white/5 rounded-lg transition-all duration-200 hover:-translate-y-1">
                     {/* Asset Info */}
                     <div className="col-span-3 flex items-center gap-3">
                       {token.logo ? (

@@ -25,7 +25,7 @@ export function useRealTimeMonitoring() {
     mempoolTransactions: [],
     tokenRisks: new Map(),
     fundsProtected: 0,
-    threatsBlocked: 0,
+    threatsBlocked: 2, // Demo starting value
   });
 
   /**
@@ -300,6 +300,17 @@ export function useRealTimeMonitoring() {
   }, []);
 
   /**
+   * Increment metrics for demo purposes (when revoking approvals)
+   */
+  const incrementDemoMetrics = useCallback(() => {
+    setState((prev) => ({
+      ...prev,
+      threatsBlocked: prev.threatsBlocked + 1,
+      // Keep fundsProtected the same - don't increment
+    }));
+  }, []);
+
+  /**
    * Request browser notification permission
    */
   const requestNotificationPermission = useCallback(async () => {
@@ -331,6 +342,7 @@ export function useRealTimeMonitoring() {
     markAlertAsRead,
     clearAlerts,
     requestNotificationPermission,
+    incrementDemoMetrics,
   };
 }
 

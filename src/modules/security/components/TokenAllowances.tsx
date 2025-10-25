@@ -15,6 +15,7 @@ import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { Token, TokenAllowance } from "@/types";
 import { AlchemyAPI } from "@/lib/alchemy";
 import { HardhatAnalyzer } from "@/lib/hardhat-analyzer";
+import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
 // Lit Protocol integration for revoking approvals
 // import LitProtocol from '@/lib/lit-protocol';
 import toast from "react-hot-toast";
@@ -30,6 +31,7 @@ export default function TokenAllowances({
   walletAddress,
 }: TokenAllowancesProps) {
   const { chain } = useAccount();
+  const { incrementDemoMetrics } = useRealTimeMonitoring();
   const [allowances, setAllowances] = useState<TokenAllowance[]>([]);
   const [loading, setLoading] = useState(false);
   const [revoking, setRevoking] = useState<string | null>(null);
@@ -183,6 +185,9 @@ export default function TokenAllowances({
       toast.success(`Revoked approval for ${allowance.token.symbol}`, {
         id: "revoke",
       });
+
+      // Increment threats blocked counter for demo video
+      incrementDemoMetrics();
 
       // Remove from list
       setAllowances((prev) =>

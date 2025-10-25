@@ -108,13 +108,12 @@ export default function TrendingCoins({ onCoinSelect }: TrendingCoinsProps) {
       <InteractiveGlassCard
         className="p-8"
         enableParticles={true}
-        enableTilt={true}
+        enableTilt={false}
         enableMagnetism={false}
         enableBorderGlow={true}
         clickEffect={true}
         particleCount={8}
         glowColor="132, 0, 255"
-        tiltIntensity={0.1}
       >
         <LoadingState message="Loading market data..." size="lg" />
       </InteractiveGlassCard>
@@ -125,13 +124,12 @@ export default function TrendingCoins({ onCoinSelect }: TrendingCoinsProps) {
     <InteractiveGlassCard
       className="p-6"
       enableParticles={true}
-      enableTilt={true}
+      enableTilt={false}
       enableMagnetism={false}
       enableBorderGlow={true}
       clickEffect={true}
       particleCount={8}
       glowColor="132, 0, 255"
-      tiltIntensity={0.3}
     >
       {/* Header with Tabs */}
       <div className="flex items-center justify-between mb-6">
