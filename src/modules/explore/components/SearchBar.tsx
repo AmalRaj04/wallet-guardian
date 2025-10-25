@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { CoinGeckoAPI } from "@/lib/coingecko";
 import { Coin } from "@/types";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 interface SearchBarProps {
@@ -156,7 +156,16 @@ export default function SearchBar({
             transition={{ duration: 0.2 }}
             className="absolute top-full left-0 right-0 mt-2 z-50"
           >
-            <GlassCard className="max-h-96 overflow-y-auto">
+            <InteractiveGlassCard
+              className="max-h-96 overflow-y-auto"
+              enableParticles={true}
+              enableTilt={true}
+              enableMagnetism={false}
+              enableBorderGlow={true}
+              clickEffect={true}
+              particleCount={8}
+              glowColor="132, 0, 255"
+            >
               {isLoading ? (
                 <div className="p-4">
                   <LoadingState message="Searching..." size="sm" />
@@ -197,7 +206,7 @@ export default function SearchBar({
                   No cryptocurrencies found for "{value}"
                 </div>
               ) : null}
-            </GlassCard>
+            </InteractiveGlassCard>
           </motion.div>
         )}
       </AnimatePresence>

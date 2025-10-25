@@ -1,38 +1,43 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { 
-  Menu, 
-  Search, 
-  Shield, 
-  TrendingUp, 
-  Wallet,
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import {
+  Menu,
+  Search,
+  Shield,
+  TrendingUp,
   Sun,
   Moon,
-  Settings
-} from 'lucide-react';
-import { useTheme } from '@/hooks/useTheme';
-import GlassCard from '@/components/ui/GlassCard';
-import Link from 'next/link';
+  Settings,
+} from "lucide-react";
+import { useTheme } from "@/hooks/useTheme";
+import GlassCard from "@/components/ui/GlassCard";
+import Link from "next/link";
 
 interface HeaderProps {
   onMenuClick?: () => void;
-  activeModule?: 'portfolio' | 'security' | 'explore';
-  onModuleChange?: (module: 'portfolio' | 'security' | 'explore') => void;
+  activeModule?: "portfolio" | "security" | "explore";
+  onModuleChange?: (module: "portfolio" | "security" | "explore") => void;
   isDarkMode?: boolean;
   setIsDarkMode?: (isDarkMode: boolean) => void;
 }
 
-export default function Header({ onMenuClick, activeModule, onModuleChange, isDarkMode, setIsDarkMode }: HeaderProps) {
+export default function Header({
+  onMenuClick,
+  activeModule,
+  onModuleChange,
+  isDarkMode,
+  setIsDarkMode,
+}: HeaderProps) {
   const { theme, toggleTheme } = useTheme();
   const [showSettings, setShowSettings] = useState(false);
 
   const modules = [
-    { id: 'portfolio' as const, label: 'Portfolio', icon: TrendingUp },
-    { id: 'security' as const, label: 'Security', icon: Shield },
-    { id: 'explore' as const, label: 'Explore', icon: Search },
+    { id: "portfolio" as const, label: "Portfolio", icon: TrendingUp },
+    { id: "security" as const, label: "Security", icon: Shield },
+    { id: "explore" as const, label: "Explore", icon: Search },
   ];
 
   const handleThemeToggle = () => {
@@ -45,7 +50,7 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/20 border-b border-white/10">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-20">
           {/* Left Section */}
           <div className="flex items-center space-x-4">
             {/* Mobile Menu Button */}
@@ -64,12 +69,29 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
               animate={{ opacity: 1, x: 0 }}
               className="flex items-center space-x-3"
             >
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">C</span>
+              <Link href="/" className="flex items-center space-x-3">
+                {/* Logo Image */}
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <img
+                    src="/sponsors/logo.png"
+                    alt="AuraGuard Logo"
+                    className="w-full h-full object-contain drop-shadow-[0_0_10px_rgba(139,92,246,0.7)]"
+                    onError={(e) => {
+                      // Fallback to gradient shield if logo image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = "none";
+                      const fallback = target.nextElementSibling as HTMLElement;
+                      if (fallback) fallback.style.display = "flex";
+                    }}
+                  />
+                  {/* Fallback Shield Icon */}
+                  <div className="hidden w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 items-center justify-center shadow-lg shadow-purple-500/50">
+                    <Shield className="w-7 h-7 text-white" />
+                  </div>
                 </div>
-                <span className="text-xl font-bold text-white font-[family-name:Space_Grotesk]">
-                  CoinScope
+                {/* Brand Name */}
+                <span className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent font-[family-name:Space_Grotesk]">
+                  AuraGuard
                 </span>
               </Link>
             </motion.div>
@@ -81,16 +103,17 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
               {modules.map((module) => {
                 const Icon = module.icon;
                 const isActive = activeModule === module.id;
-                
+
                 return (
                   <motion.button
                     key={module.id}
                     onClick={() => onModuleChange(module.id)}
                     className={`
                       relative px-4 py-2 rounded-lg font-medium transition-all duration-300
-                      ${isActive 
-                        ? 'text-neon-blue bg-neon-blue/10 shadow-neon-blue' 
-                        : 'text-gray-300 hover:text-white hover:bg-white/10'
+                      ${
+                        isActive
+                          ? "text-neon-blue bg-neon-blue/10 shadow-neon-blue"
+                          : "text-gray-300 hover:text-white hover:bg-white/10"
                       }
                     `}
                     whileHover={{ scale: 1.05 }}
@@ -100,13 +123,17 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
                       <Icon className="w-4 h-4" />
                       <span>{module.label}</span>
                     </div>
-                    
+
                     {isActive && (
                       <motion.div
                         layoutId="activeModule"
                         className="absolute inset-0 bg-neon-blue/20 rounded-lg border border-neon-blue/30"
                         initial={false}
-                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                        transition={{
+                          type: "spring",
+                          bounce: 0.2,
+                          duration: 0.6,
+                        }}
                       />
                     )}
                   </motion.button>
@@ -121,9 +148,9 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
             <button
               onClick={handleThemeToggle}
               className="p-2 rounded-lg hover:bg-white/10 transition-colors"
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
             >
-              {theme === 'dark' ? (
+              {theme === "dark" ? (
                 <Sun className="w-5 h-5 text-yellow-400" />
               ) : (
                 <Moon className="w-5 h-5 text-blue-400" />
@@ -155,7 +182,7 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
                           onClick={handleThemeToggle}
                           className="px-3 py-1 rounded bg-white/10 hover:bg-white/20 transition-colors"
                         >
-                          {theme === 'dark' ? 'Dark' : 'Light'}
+                          {theme === "dark" ? "Dark" : "Light"}
                         </button>
                       </div>
                       <div className="flex items-center justify-between">
@@ -170,18 +197,21 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
               )}
             </div>
 
-            {/* Wallet Guardian Link */}
-            <Link href="/dashboard" className="hidden sm:block text-gray-300 hover:text-white transition-colors">
-              Wallet Guardian
+            {/* Dashboard Link */}
+            <Link
+              href="/dashboard"
+              className="hidden sm:block text-gray-300 hover:text-white transition-colors"
+            >
+              Dashboard
             </Link>
 
             {/* Wallet Connection */}
             <div className="hidden sm:block">
-              <ConnectButton 
+              <ConnectButton
                 chainStatus="icon"
                 accountStatus={{
-                  smallScreen: 'avatar',
-                  largeScreen: 'full',
+                  smallScreen: "avatar",
+                  largeScreen: "full",
                 }}
                 showBalance={{
                   smallScreen: false,
@@ -199,16 +229,17 @@ export default function Header({ onMenuClick, activeModule, onModuleChange, isDa
               {modules.map((module) => {
                 const Icon = module.icon;
                 const isActive = activeModule === module.id;
-                
+
                 return (
                   <button
                     key={module.id}
                     onClick={() => onModuleChange(module.id)}
                     className={`
                       flex flex-col items-center space-y-1 px-3 py-2 rounded-lg transition-all duration-300
-                      ${isActive 
-                        ? 'text-neon-blue bg-neon-blue/10' 
-                        : 'text-gray-400 hover:text-white'
+                      ${
+                        isActive
+                          ? "text-neon-blue bg-neon-blue/10"
+                          : "text-gray-400 hover:text-white"
                       }
                     `}
                   >

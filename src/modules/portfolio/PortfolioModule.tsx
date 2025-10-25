@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { motion } from 'framer-motion';
-import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useWallet } from '@/hooks/useWallet';
-import { usePriceMonitor } from '@/hooks/usePriceMonitor';
-import PortfolioOverview from './components/PortfolioOverview';
-import TokenList from './components/TokenList';
-import AlertsPanel from './components/AlertsPanel';
-import GlassCard from '@/components/ui/GlassCard';
-import { LoadingState } from '@/components/ui/LoadingState';
-import ErrorBoundary from '@/components/ErrorBoundary';
+import { motion } from "framer-motion";
+import { useAccount } from "wagmi";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useWallet } from "@/hooks/useWallet";
+import { usePriceMonitor } from "@/hooks/usePriceMonitor";
+import PortfolioOverview from "./components/PortfolioOverview";
+import TokenList from "./components/TokenList";
+import AlertsPanel from "./components/AlertsPanel";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
+import { LoadingState } from "@/components/ui/LoadingState";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export default function PortfolioModule() {
   const { isConnected } = useAccount();
@@ -30,7 +30,16 @@ export default function PortfolioModule() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <GlassCard className="p-12 max-w-md mx-auto">
+          <InteractiveGlassCard
+            className="p-12 max-w-md mx-auto"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={12}
+            glowColor="132, 0, 255"
+          >
             <div className="w-20 h-20 bg-gradient-to-br from-neon-blue to-neon-purple rounded-full mx-auto mb-6 flex items-center justify-center">
               <span className="text-3xl">👛</span>
             </div>
@@ -38,10 +47,11 @@ export default function PortfolioModule() {
               Connect Your Wallet
             </h2>
             <p className="text-gray-400 mb-8">
-              Connect your Web3 wallet to track your portfolio, receive AI-powered alerts, and manage your investments.
+              Connect your Web3 wallet to track your portfolio, receive
+              AI-powered alerts, and manage your investments.
             </p>
             <ConnectButton />
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       </div>
     );
@@ -70,15 +80,19 @@ export default function PortfolioModule() {
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
             Monitor your investments with real-time data and AI-powered insights
           </p>
-          
+
           {/* Monitoring Status */}
           <div className="flex items-center justify-center space-x-4 mt-4">
-            <div className={`px-4 py-2 rounded-lg text-sm font-medium ${
-              isMonitoring
-                ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                : 'bg-gray-500/20 text-gray-400 border border-gray-500/30'
-            }`}>
-              {isMonitoring ? '🟢 Real-Time Protection Active' : '⚫ Connecting...'}
+            <div
+              className={`px-4 py-2 rounded-lg text-sm font-medium ${
+                isMonitoring
+                  ? "bg-green-500/20 text-green-400 border border-green-500/30"
+                  : "bg-gray-500/20 text-gray-400 border border-gray-500/30"
+              }`}
+            >
+              {isMonitoring
+                ? "🟢 Real-Time Protection Active"
+                : "⚫ Connecting..."}
             </div>
           </div>
         </motion.div>
@@ -101,8 +115,8 @@ export default function PortfolioModule() {
             transition={{ delay: 0.2 }}
             className="xl:col-span-2"
           >
-            <TokenList 
-              tokens={portfolio?.tokens || []} 
+            <TokenList
+              tokens={portfolio?.tokens || []}
               onRefresh={refreshPortfolio}
               isLoading={isLoadingPortfolio}
             />

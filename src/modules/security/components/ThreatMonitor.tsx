@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Activity, AlertTriangle, Shield, Zap } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
 
 export default function ThreatMonitor() {
@@ -53,7 +53,17 @@ export default function ThreatMonitor() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            tiltIntensity={0.4}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Monitoring Status</p>
@@ -73,7 +83,7 @@ export default function ThreatMonitor() {
                 />
               </div>
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
 
         <motion.div
@@ -81,7 +91,16 @@ export default function ThreatMonitor() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Threats Blocked</p>
@@ -93,7 +112,7 @@ export default function ThreatMonitor() {
                 <Shield className="w-6 h-6 text-green-400" />
               </div>
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
 
         <motion.div
@@ -101,7 +120,16 @@ export default function ThreatMonitor() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Funds Protected</p>
@@ -113,7 +141,7 @@ export default function ThreatMonitor() {
                 <Zap className="w-6 h-6 text-neon-blue" />
               </div>
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       </div>
 
@@ -123,7 +151,17 @@ export default function ThreatMonitor() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          tiltIntensity={0.4}
+          glowColor="132, 0, 255"
+        >
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
               <Activity className="w-6 h-6 text-neon-blue" />
@@ -145,16 +183,9 @@ export default function ThreatMonitor() {
             <div className="text-center py-12">
               <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">Monitoring Paused</h3>
-              <p className="text-gray-400 mb-6">
+              <p className="text-gray-400">
                 Connect your wallet to start real-time threat monitoring
               </p>
-              <button
-                onClick={() => startMonitoring([])}
-                className="px-6 py-3 bg-neon-blue rounded-lg text-white font-semibold hover:bg-neon-blue/80 transition-colors inline-flex items-center gap-2"
-              >
-                <Activity className="w-5 h-5" />
-                Start Monitoring
-              </button>
             </div>
           ) : recentTransactions.length === 0 ? (
             <div className="text-center py-12">
@@ -215,7 +246,7 @@ export default function ThreatMonitor() {
               ))}
             </div>
           )}
-        </GlassCard>
+        </InteractiveGlassCard>
       </motion.div>
 
       {/* Threat Types Legend */}
@@ -224,7 +255,17 @@ export default function ThreatMonitor() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          tiltIntensity={0.4}
+          glowColor="132, 0, 255"
+        >
           <h3 className="text-lg font-bold mb-4">Threat Types</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex items-start gap-3">
@@ -264,7 +305,7 @@ export default function ThreatMonitor() {
               </div>
             </div>
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
       </motion.div>
     </div>
   );

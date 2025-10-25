@@ -9,7 +9,7 @@ import {
   AlertTriangle,
   CheckCircle,
 } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { HardhatAnalyzer } from "@/lib/hardhat-analyzer";
 import { ethers } from "ethers";
 
@@ -76,7 +76,17 @@ export default function BytecodeAnalyzer() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <div className="flex items-center gap-3 mb-4">
           <Shield className="w-8 h-8 text-neon-blue" />
           <div>
@@ -120,7 +130,7 @@ export default function BytecodeAnalyzer() {
             {error}
           </div>
         )}
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Results */}
       {report && (
@@ -130,7 +140,16 @@ export default function BytecodeAnalyzer() {
           className="space-y-6"
         >
           {/* Security Score */}
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <h3 className="text-xl font-bold mb-4">Security Assessment</h3>
             <div className="flex items-center justify-between">
               <div>
@@ -147,11 +166,20 @@ export default function BytecodeAnalyzer() {
                 className={`w-24 h-24 ${getGradeColor(report.overallGrade)}`}
               />
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
 
           {/* Vulnerabilities */}
           {report.vulnerabilities.length > 0 ? (
-            <GlassCard className="p-6">
+            <InteractiveGlassCard
+              className="p-6"
+              enableParticles={true}
+              enableTilt={true}
+              enableMagnetism={false}
+              enableBorderGlow={true}
+              clickEffect={true}
+              particleCount={8}
+              glowColor="132, 0, 255"
+            >
               <h3 className="text-xl font-bold mb-4">
                 Vulnerabilities Found ({report.vulnerabilities.length})
               </h3>
@@ -217,9 +245,18 @@ export default function BytecodeAnalyzer() {
                   </motion.div>
                 ))}
               </div>
-            </GlassCard>
+            </InteractiveGlassCard>
           ) : (
-            <GlassCard className="p-6 text-center">
+            <InteractiveGlassCard
+              className="p-6 text-center"
+              enableParticles={true}
+              enableTilt={true}
+              enableMagnetism={false}
+              enableBorderGlow={true}
+              clickEffect={true}
+              particleCount={8}
+              glowColor="132, 0, 255"
+            >
               <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2 text-green-400">
                 No Vulnerabilities Detected
@@ -227,12 +264,21 @@ export default function BytecodeAnalyzer() {
               <p className="text-gray-400">
                 The bytecode analysis didn't find any obvious security issues
               </p>
-            </GlassCard>
+            </InteractiveGlassCard>
           )}
 
           {/* Recommendations */}
           {report.recommendations.length > 0 && (
-            <GlassCard className="p-6">
+            <InteractiveGlassCard
+              className="p-6"
+              enableParticles={true}
+              enableTilt={true}
+              enableMagnetism={false}
+              enableBorderGlow={true}
+              clickEffect={true}
+              particleCount={8}
+              glowColor="132, 0, 255"
+            >
               <h3 className="text-xl font-bold mb-4">
                 Overall Recommendations
               </h3>
@@ -247,11 +293,20 @@ export default function BytecodeAnalyzer() {
                   </div>
                 ))}
               </div>
-            </GlassCard>
+            </InteractiveGlassCard>
           )}
 
           {/* Info */}
-          <GlassCard className="p-6 bg-purple-500/5 border-purple-500/30">
+          <InteractiveGlassCard
+            className="p-6 bg-purple-500/5 border-purple-500/30"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <h4 className="font-semibold text-purple-400 mb-2 flex items-center gap-2">
               <Shield className="w-4 h-4" />
               About Hardhat 3 Bytecode Analysis
@@ -271,7 +326,7 @@ export default function BytecodeAnalyzer() {
             <p className="text-xs text-gray-400 mt-3">
               Analyzed at: {new Date(report.timestamp).toLocaleString()}
             </p>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       )}
     </div>

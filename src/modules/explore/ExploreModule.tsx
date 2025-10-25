@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import SearchBar from './components/SearchBar';
-import TrendingCoins from './components/TrendingCoins';
-import CoinDetails from './components/CoinDetails';
-import AIAnalysis from './components/AIAnalysis';
-import { Coin } from '@/types';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import SearchBar from "./components/SearchBar";
+import TrendingCoins from "./components/TrendingCoins";
+import CoinDetails from "./components/CoinDetails";
+import AIAnalysis from "./components/AIAnalysis";
+import { Coin } from "@/types";
 
 export default function ExploreModule() {
   const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <div className="space-y-8">
@@ -24,7 +24,8 @@ export default function ExploreModule() {
           Crypto Explorer
         </h1>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-          Discover and analyze cryptocurrencies with AI-powered insights and real-time market data
+          Discover and analyze cryptocurrencies with AI-powered insights and
+          real-time market data
         </p>
       </motion.div>
 
@@ -34,7 +35,7 @@ export default function ExploreModule() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <SearchBar 
+        <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
           onCoinSelect={setSelectedCoin}
@@ -72,7 +73,8 @@ export default function ExploreModule() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Select a Coin</h3>
               <p className="text-gray-400">
-                Choose a cryptocurrency to view detailed analysis and AI insights
+                Choose a cryptocurrency to view detailed analysis and AI
+                insights
               </p>
             </div>
           )}

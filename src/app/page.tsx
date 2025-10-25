@@ -1,10 +1,8 @@
-'use client';
+"use client";
 import { useState, useEffect } from "react";
-import { Toaster } from "sonner";
-import { useAccount } from 'wagmi';
-import Header from "@/components/Header";
-import LandingPage from "@/components/LandingPage";
+import { useAccount } from "wagmi";
 import WalletGuardianDashboard from "@/components/WalletGuardianDashboard";
+import EnhancedLandingPage from "@/components/EnhancedLandingPage";
 
 export default function HomePage() {
   const { isConnected } = useAccount();
@@ -22,7 +20,7 @@ export default function HomePage() {
 
   // Show landing page if wallet not connected
   if (!isConnected) {
-    return <LandingPage />;
+    return <EnhancedLandingPage />;
   }
 
   // Show main dashboard if wallet is connected

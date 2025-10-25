@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, Star } from "lucide-react";
 import { CoinGeckoAPI } from "@/lib/coingecko";
 import { Coin, TrendingCoin } from "@/types";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 interface TrendingCoinsProps {
@@ -105,14 +105,34 @@ export default function TrendingCoins({ onCoinSelect }: TrendingCoinsProps) {
 
   if (isLoading) {
     return (
-      <GlassCard className="p-8">
+      <InteractiveGlassCard
+        className="p-8"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        glowColor="132, 0, 255"
+        tiltIntensity={0.1}
+      >
         <LoadingState message="Loading market data..." size="lg" />
-      </GlassCard>
+      </InteractiveGlassCard>
     );
   }
 
   return (
-    <GlassCard className="p-6">
+    <InteractiveGlassCard
+      className="p-6"
+      enableParticles={true}
+      enableTilt={true}
+      enableMagnetism={false}
+      enableBorderGlow={true}
+      clickEffect={true}
+      particleCount={8}
+      glowColor="132, 0, 255"
+      tiltIntensity={0.3}
+    >
       {/* Header with Tabs */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gradient">Market Overview</h2>
@@ -274,6 +294,6 @@ export default function TrendingCoins({ onCoinSelect }: TrendingCoinsProps) {
           Refresh Data
         </button>
       </div>
-    </GlassCard>
+    </InteractiveGlassCard>
   );
 }

@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { Coin, AIResponse } from "@/types";
 import { GroqAI } from "@/lib/groq";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 interface AIAnalysisProps {
@@ -89,7 +89,16 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
   };
 
   return (
-    <GlassCard className="p-6 h-fit">
+    <InteractiveGlassCard
+      className="p-6 h-fit"
+      enableParticles={true}
+      enableTilt={true}
+      enableMagnetism={false}
+      enableBorderGlow={true}
+      clickEffect={true}
+      particleCount={8}
+      glowColor="132, 0, 255"
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-white flex items-center">
@@ -236,6 +245,6 @@ export default function AIAnalysis({ coin }: AIAnalysisProps) {
           <div className="text-xs text-gray-500">Powered by Groq AI</div>
         </div>
       )}
-    </GlassCard>
+    </InteractiveGlassCard>
   );
 }

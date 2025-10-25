@@ -11,7 +11,7 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { useAccount } from "wagmi";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { Token, TokenAllowance } from "@/types";
 import { AlchemyAPI } from "@/lib/alchemy";
 import { HardhatAnalyzer } from "@/lib/hardhat-analyzer";
@@ -256,20 +256,39 @@ export default function TokenAllowances({
 
   if (!walletAddress) {
     return (
-      <GlassCard className="p-12 text-center">
+      <InteractiveGlassCard
+        className="p-12 text-center"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        glowColor="132, 0, 255"
+      >
         <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-xl font-bold mb-2">Connect Wallet</h3>
         <p className="text-gray-400">
           Connect your wallet to view token approvals
         </p>
-      </GlassCard>
+      </InteractiveGlassCard>
     );
   }
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-2xl font-bold">Token Approvals</h2>
@@ -316,11 +335,20 @@ export default function TokenAllowances({
             <div className="text-sm text-gray-400">Low Risk</div>
           </div>
         </div>
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Bulk Actions */}
       {allowances.length > 0 && (
-        <GlassCard className="p-4">
+        <InteractiveGlassCard
+          className="p-4"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          glowColor="132, 0, 255"
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
@@ -346,11 +374,21 @@ export default function TokenAllowances({
               </button>
             )}
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
       )}
 
       {/* Allowances List */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <Loader2 className="w-8 h-8 animate-spin text-neon-blue" />
@@ -480,10 +518,20 @@ export default function TokenAllowances({
             })}
           </div>
         )}
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Info */}
-      <GlassCard className="p-6 bg-blue-500/5 border-blue-500/30">
+      <InteractiveGlassCard
+        className="p-6 bg-blue-500/5 border-blue-500/30"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <h4 className="font-semibold text-blue-400 mb-2 flex items-center gap-2">
           <Shield className="w-4 h-4" />
           About Token Approvals
@@ -503,7 +551,7 @@ export default function TokenAllowances({
           <strong>Best Practice:</strong> Revoke approvals you no longer need
           and avoid unlimited approvals when possible.
         </p>
-      </GlassCard>
+      </InteractiveGlassCard>
     </div>
   );
 }

@@ -12,7 +12,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 
 // Configure wallets
 const { connectors } = getDefaultWallets({
-  appName: 'Wallet Guardian',
+  appName: 'AuraGaurd',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'demo',
 });
 
@@ -47,7 +47,7 @@ export default function Providers({ children }: ProvidersProps) {
       <WagmiProvider config={wagmiConfig}>
         <RainbowKitProvider
           theme={darkTheme({
-            accentColor: '#00D4FF',
+            accentColor: "#8b5cf6",
             accentColorForeground: 'white',
             borderRadius: 'medium',
             fontStack: 'system',

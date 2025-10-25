@@ -11,7 +11,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { Token } from "@/types";
 import { usePortfolioRisk } from "@/hooks/usePortfolioRisk";
 import { GroqAI } from "@/lib/groq";
@@ -125,20 +125,40 @@ Be specific and actionable.`;
 
   if (!token) {
     return (
-      <GlassCard className="p-12 text-center">
+      <InteractiveGlassCard
+        className="p-12 text-center"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
         <h3 className="text-xl font-bold mb-2">No Tokens Available</h3>
         <p className="text-gray-400">
           Connect your wallet to analyze token security
         </p>
-      </GlassCard>
+      </InteractiveGlassCard>
     );
   }
 
   return (
     <div className="space-y-6">
       {/* Token Selector */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <h3 className="text-lg font-bold mb-4">Select Token to Analyze</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {tokens.slice(0, 12).map((t) => {
@@ -191,10 +211,20 @@ Be specific and actionable.`;
             );
           })}
         </div>
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Risk Overview */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <button
           onClick={() => toggleSection("overview")}
           className="w-full flex items-center justify-between mb-4"
@@ -343,10 +373,20 @@ Be specific and actionable.`;
             )}
           </div>
         )}
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* AI Analysis */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        tiltIntensity={0.4}
+        glowColor="132, 0, 255"
+      >
         <button
           onClick={() => toggleSection("ai")}
           className="w-full flex items-center justify-between mb-4"
@@ -417,11 +457,21 @@ Be specific and actionable.`;
             )}
           </div>
         )}
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Bytecode Analysis */}
       {bytecodeReport && (
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          tiltIntensity={0.4}
+          glowColor="132, 0, 255"
+        >
           <button
             onClick={() => toggleSection("bytecode")}
             className="w-full flex items-center justify-between mb-4"
@@ -517,7 +567,7 @@ Be specific and actionable.`;
               )}
             </div>
           )}
-        </GlassCard>
+        </InteractiveGlassCard>
       )}
     </div>
   );

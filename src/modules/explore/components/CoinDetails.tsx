@@ -1,24 +1,32 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  ExternalLink, 
-  Globe, 
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  TrendingUp,
+  TrendingDown,
+  ExternalLink,
+  Globe,
   Github,
   Twitter,
   MessageCircle,
   Calendar,
   DollarSign,
-  BarChart3
-} from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Coin, ChartData } from '@/types';
-import { CoinGeckoAPI } from '@/lib/coingecko';
-import GlassCard from '@/components/ui/GlassCard';
-import { LoadingState } from '@/components/ui/LoadingState';
+  Activity,
+} from "lucide-react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import { Coin, ChartData } from "@/types";
+import { CoinGeckoAPI } from "@/lib/coingecko";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
+import { LoadingState } from "@/components/ui/LoadingState";
 
 interface CoinDetailsProps {
   coin: Coin;
@@ -27,7 +35,7 @@ interface CoinDetailsProps {
 export default function CoinDetails({ coin }: CoinDetailsProps) {
   const [chartData, setChartData] = useState<ChartData[]>([]);
   const [isLoadingChart, setIsLoadingChart] = useState(false);
-  const [timeframe, setTimeframe] = useState<'1' | '7' | '30'>('7');
+  const [timeframe, setTimeframe] = useState<"1" | "7" | "30">("7");
 
   useEffect(() => {
     if (coin.id) {
@@ -38,10 +46,13 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
   const fetchChartData = async () => {
     setIsLoadingChart(true);
     try {
-      const data = await CoinGeckoAPI.getCoinHistory(coin.id, parseInt(timeframe));
+      const data = await CoinGeckoAPI.getCoinHistory(
+        coin.id,
+        parseInt(timeframe)
+      );
       setChartData(data);
     } catch (error) {
-      console.error('Error fetching chart data:', error);
+      console.error("Error fetching chart data:", error);
     } finally {
       setIsLoadingChart(false);
     }
@@ -84,7 +95,16 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        glowColor="132, 0, 255"
+      >
         <div className="flex items-start justify-between">
           <div className="flex items-center space-x-4">
             <img
@@ -92,13 +112,15 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
               alt={coin.name}
               className="w-16 h-16 rounded-full"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder-coin.png';
+                (e.target as HTMLImageElement).src = "/placeholder-coin.png";
               }}
             />
             <div>
               <h1 className="text-3xl font-bold text-white">{coin.name}</h1>
               <div className="flex items-center space-x-2 mt-1">
-                <span className="text-lg text-gray-400 uppercase">{coin.symbol}</span>
+                <span className="text-lg text-gray-400 uppercase">
+                  {coin.symbol}
+                </span>
                 <span className="px-2 py-1 bg-gray-700 rounded text-sm text-gray-300">
                   Rank #{coin.market_cap_rank}
                 </span>
@@ -110,40 +132,52 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
             <div className="text-3xl font-bold text-white">
               {formatPrice(coin.current_price)}
             </div>
-            <div className={`flex items-center justify-end space-x-1 mt-1 ${
-              isPositiveChange ? 'text-green-400' : 'text-red-400'
-            }`}>
+            <div
+              className={`flex items-center justify-end space-x-1 mt-1 ${
+                isPositiveChange ? "text-green-400" : "text-red-400"
+              }`}
+            >
               {isPositiveChange ? (
                 <TrendingUp className="w-5 h-5" />
               ) : (
                 <TrendingDown className="w-5 h-5" />
               )}
               <span className="text-lg font-medium">
-                {isPositiveChange ? '+' : ''}{coin.price_change_percentage_24h.toFixed(2)}%
+                {isPositiveChange ? "+" : ""}
+                {coin.price_change_percentage_24h.toFixed(2)}%
               </span>
             </div>
           </div>
         </div>
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Price Chart */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        glowColor="132, 0, 255"
+      >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-bold text-white">Price Chart</h2>
-          
+
           <div className="flex bg-black/20 rounded-lg p-1">
             {[
-              { value: '1', label: '24H' },
-              { value: '7', label: '7D' },
-              { value: '30', label: '30D' },
+              { value: "1", label: "24H" },
+              { value: "7", label: "7D" },
+              { value: "30", label: "30D" },
             ].map((option) => (
               <button
                 key={option.value}
                 onClick={() => setTimeframe(option.value as any)}
                 className={`px-3 py-1 rounded text-sm font-medium transition-all ${
                   timeframe === option.value
-                    ? 'bg-neon-blue/20 text-neon-blue border border-neon-blue/30'
-                    : 'text-gray-400 hover:text-white'
+                    ? "bg-neon-blue/20 text-neon-blue border border-neon-blue/30"
+                    : "text-gray-400 hover:text-white"
                 }`}
               >
                 {option.label}
@@ -162,61 +196,61 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
               <LineChart data={chartData}>
                 <defs>
                   <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#00D4FF" stopOpacity={0.3}/>
-                    <stop offset="95%" stopColor="#00D4FF" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#00D4FF" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#00D4FF" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke="rgba(255,255,255,0.1)" 
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="rgba(255,255,255,0.1)"
                   vertical={false}
                 />
-                <XAxis 
-                  dataKey="time" 
-                  stroke="#6B7280" 
+                <XAxis
+                  dataKey="time"
+                  stroke="#6B7280"
                   fontSize={12}
-                  tick={{ fill: '#9CA3AF' }}
+                  tick={{ fill: "#9CA3AF" }}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+                  axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
                 />
-                <YAxis 
-                  stroke="#6B7280" 
+                <YAxis
+                  stroke="#6B7280"
                   fontSize={12}
-                  tick={{ fill: '#9CA3AF' }}
+                  tick={{ fill: "#9CA3AF" }}
                   tickLine={false}
-                  axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
+                  axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
                   tickFormatter={(value) => `$${value.toLocaleString()}`}
-                  domain={['auto', 'auto']}
+                  domain={["auto", "auto"]}
                 />
-                <Tooltip 
+                <Tooltip
                   contentStyle={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.9)',
-                    border: '1px solid rgba(0, 212, 255, 0.3)',
-                    borderRadius: '12px',
-                    color: '#fff',
-                    backdropFilter: 'blur(10px)',
-                    padding: '12px'
+                    backgroundColor: "rgba(0, 0, 0, 0.9)",
+                    border: "1px solid rgba(0, 212, 255, 0.3)",
+                    borderRadius: "12px",
+                    color: "#fff",
+                    backdropFilter: "blur(10px)",
+                    padding: "12px",
                   }}
-                  labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
+                  labelStyle={{ color: "#9CA3AF", marginBottom: "4px" }}
                   formatter={(value: number) => [
-                    `$${value.toLocaleString(undefined, { 
-                      minimumFractionDigits: 2, 
-                      maximumFractionDigits: value >= 1 ? 2 : 8 
-                    })}`, 
-                    'Price'
+                    `$${value.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: value >= 1 ? 2 : 8,
+                    })}`,
+                    "Price",
                   ]}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="price" 
-                  stroke="#00D4FF" 
+                <Line
+                  type="monotone"
+                  dataKey="price"
+                  stroke="#00D4FF"
                   strokeWidth={2}
                   dot={false}
-                  activeDot={{ 
-                    r: 6, 
-                    fill: '#00D4FF',
-                    stroke: '#fff',
-                    strokeWidth: 2
+                  activeDot={{
+                    r: 6,
+                    fill: "#00D4FF",
+                    stroke: "#fff",
+                    strokeWidth: 2,
                   }}
                   fill="url(#colorPrice)"
                 />
@@ -228,16 +262,25 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
             <div className="text-gray-400">No chart data available</div>
           </div>
         )}
-      </GlassCard>
+      </InteractiveGlassCard>
 
       {/* Market Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          glowColor="132, 0, 255"
+        >
           <h3 className="text-lg font-bold text-white mb-4 flex items-center">
-            <BarChart3 className="w-5 h-5 mr-2 text-neon-blue" />
+            <Activity className="w-5 h-5 mr-2 text-neon-blue" />
             Market Data
           </h3>
-          
+
           <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-gray-400">Market Cap</span>
@@ -245,21 +288,21 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
                 {formatMarketCap(coin.market_cap)}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span className="text-gray-400">24h Volume</span>
               <span className="text-white font-medium">
                 {formatMarketCap(coin.total_volume)}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span className="text-gray-400">24h High</span>
               <span className="text-white font-medium">
                 {formatPrice(coin.high_24h)}
               </span>
             </div>
-            
+
             <div className="flex justify-between">
               <span className="text-gray-400">24h Low</span>
               <span className="text-white font-medium">
@@ -267,14 +310,23 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
               </span>
             </div>
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
 
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          glowColor="132, 0, 255"
+        >
           <h3 className="text-lg font-bold text-white mb-4 flex items-center">
             <DollarSign className="w-5 h-5 mr-2 text-neon-purple" />
             Supply Info
           </h3>
-          
+
           <div className="space-y-4">
             <div className="flex justify-between">
               <span className="text-gray-400">Circulating Supply</span>
@@ -282,7 +334,7 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
                 {formatSupply(coin.circulating_supply)}
               </span>
             </div>
-            
+
             {coin.total_supply && (
               <div className="flex justify-between">
                 <span className="text-gray-400">Total Supply</span>
@@ -291,7 +343,7 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
                 </span>
               </div>
             )}
-            
+
             {coin.max_supply && (
               <div className="flex justify-between">
                 <span className="text-gray-400">Max Supply</span>
@@ -300,7 +352,7 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
                 </span>
               </div>
             )}
-            
+
             <div className="flex justify-between">
               <span className="text-gray-400">All-Time High</span>
               <div className="text-right">
@@ -313,16 +365,25 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
               </div>
             </div>
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
       </div>
 
       {/* Additional Info */}
-      <GlassCard className="p-6">
+      <InteractiveGlassCard
+        className="p-6"
+        enableParticles={true}
+        enableTilt={true}
+        enableMagnetism={false}
+        enableBorderGlow={true}
+        clickEffect={true}
+        particleCount={8}
+        glowColor="132, 0, 255"
+      >
         <h3 className="text-lg font-bold text-white mb-4 flex items-center">
           <Calendar className="w-5 h-5 mr-2 text-neon-green" />
           Additional Information
         </h3>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <div className="text-gray-400 mb-2">All-Time Low</div>
@@ -333,7 +394,7 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
               +{Math.abs(coin.atl_change_percentage).toFixed(1)}%
             </div>
           </div>
-          
+
           <div>
             <div className="text-gray-400 mb-2">Last Updated</div>
             <div className="text-white font-medium">
@@ -341,7 +402,7 @@ export default function CoinDetails({ coin }: CoinDetailsProps) {
             </div>
           </div>
         </div>
-      </GlassCard>
+      </InteractiveGlassCard>
     </div>
   );
 }

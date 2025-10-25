@@ -8,7 +8,7 @@ import {
   TrendingDown,
   Activity,
 } from "lucide-react";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { usePortfolioRisk } from "@/hooks/usePortfolioRisk";
 import { useRealTimeMonitoring } from "@/hooks/useRealTimeMonitoring";
 import { Token } from "@/types";
@@ -78,7 +78,17 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <GlassCard className={`p-8 border-2 ${riskColor.border}`}>
+        <InteractiveGlassCard
+          className={`p-8 border-2 ${riskColor.border}`}
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={12}
+          glowColor="132, 0, 255"
+          tiltIntensity={0.4}
+        >
           <div className="text-center">
             <div className="flex items-center justify-center mb-4">
               <Shield className={`w-16 h-16 ${riskColor.text}`} />
@@ -125,7 +135,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               </div>
             </div>
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
       </motion.div>
 
       {/* Stats Grid */}
@@ -135,11 +145,15 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <GlassCard
-            className={`p-6 cursor-pointer transition-all ${!isMonitoring ? "hover:border-neon-blue/50" : ""}`}
-            onClick={() =>
-              isMonitoring ? stopMonitoring() : startMonitoring(tokens)
-            }
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
           >
             <div className="flex items-center justify-between">
               <div>
@@ -154,10 +168,10 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
                 </p>
               </div>
               <Activity
-                className={`w-8 h-8 ${isMonitoring ? "text-green-400 animate-pulse" : "text-orange-400"}`}
+                className={`w-8 h-8 ${isMonitoring ? "text-green-400" : "text-gray-400"}`}
               />
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
 
         <motion.div
@@ -165,7 +179,16 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Threats Blocked</p>
@@ -175,7 +198,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               </div>
               <Shield className="w-8 h-8 text-green-400" />
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
 
         <motion.div
@@ -183,7 +206,16 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Funds Protected</p>
@@ -193,7 +225,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               </div>
               <TrendingDown className="w-8 h-8 text-neon-blue" />
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
 
         <motion.div
@@ -201,7 +233,16 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <GlassCard className="p-6">
+          <InteractiveGlassCard
+            className="p-6"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">High Risk Assets</p>
@@ -211,7 +252,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               </div>
               <AlertTriangle className="w-8 h-8 text-red-400" />
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       </div>
 
@@ -221,7 +262,17 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
       >
-        <GlassCard className="p-6">
+        <InteractiveGlassCard
+          className="p-6"
+          enableParticles={true}
+          enableTilt={true}
+          enableMagnetism={false}
+          enableBorderGlow={true}
+          clickEffect={true}
+          particleCount={8}
+          tiltIntensity={0.4}
+          glowColor="132, 0, 255"
+        >
           <h3 className="text-xl font-bold mb-4">Asset Distribution</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="text-center p-4 bg-green-500/10 rounded-lg border border-green-500/30">
@@ -246,7 +297,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
               <p className="text-sm text-gray-400">High Risk</p>
             </div>
           </div>
-        </GlassCard>
+        </InteractiveGlassCard>
       </motion.div>
 
       {/* Recommendations */}
@@ -256,7 +307,16 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
         >
-          <GlassCard className="p-6 border border-red-500/30 bg-red-500/5">
+          <InteractiveGlassCard
+            className="p-6 border border-red-500/30 bg-red-500/5"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="flex items-start gap-3">
               <AlertTriangle className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
               <div>
@@ -270,7 +330,7 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
                 </button>
               </div>
             </div>
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       )}
     </div>

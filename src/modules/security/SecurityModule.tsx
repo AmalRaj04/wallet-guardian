@@ -11,7 +11,7 @@ import TokenAllowances from "./components/TokenAllowances";
 import RiskAnalysis from "./components/RiskAnalysis";
 import ThreatMonitor from "./components/ThreatMonitor";
 import BytecodeAnalyzer from "./components/BytecodeAnalyzer";
-import GlassCard from "@/components/ui/GlassCard";
+import InteractiveGlassCard from "@/components/ui/InteractiveGlassCard";
 import { LoadingState } from "@/components/ui/LoadingState";
 
 export default function SecurityModule() {
@@ -43,7 +43,16 @@ export default function SecurityModule() {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <GlassCard className="p-12 max-w-md mx-auto">
+          <InteractiveGlassCard
+            className="p-12 max-w-md mx-auto"
+            enableParticles={true}
+            enableTilt={true}
+            enableMagnetism={false}
+            enableBorderGlow={true}
+            clickEffect={true}
+            particleCount={8}
+            glowColor="132, 0, 255"
+          >
             <div className="w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full mx-auto mb-6 flex items-center justify-center">
               <span className="text-3xl">🛡️</span>
             </div>
@@ -55,7 +64,7 @@ export default function SecurityModule() {
               analysis, and threat detection features.
             </p>
             <ConnectButton />
-          </GlassCard>
+          </InteractiveGlassCard>
         </motion.div>
       </div>
     );
