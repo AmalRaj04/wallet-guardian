@@ -47,109 +47,10 @@ export default function ThreatMonitor() {
 
   return (
     <div className="space-y-6">
-      {/* Header Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <InteractiveGlassCard
-            className="p-6"
-            enableParticles={true}
-            enableTilt={true}
-            enableMagnetism={false}
-            enableBorderGlow={true}
-            clickEffect={true}
-            tiltIntensity={0.4}
-            particleCount={8}
-            glowColor="132, 0, 255"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Monitoring Status</p>
-                <p
-                  className={`text-xl font-bold ${isMonitoring ? "text-green-400" : "text-gray-400"}`}
-                >
-                  {isMonitoring ? "Live" : "Paused"}
-                </p>
-              </div>
-              <div
-                className={`w-12 h-12 rounded-lg flex items-center justify-center ${
-                  isMonitoring ? "bg-green-500/20" : "bg-gray-500/20"
-                }`}
-              >
-                <Activity
-                  className={`w-6 h-6 ${isMonitoring ? "text-green-400 animate-pulse" : "text-gray-400"}`}
-                />
-              </div>
-            </div>
-          </InteractiveGlassCard>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-        >
-          <InteractiveGlassCard
-            className="p-6"
-            enableParticles={true}
-            enableTilt={true}
-            enableMagnetism={false}
-            enableBorderGlow={true}
-            clickEffect={true}
-            particleCount={8}
-            glowColor="132, 0, 255"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Threats Blocked</p>
-                <p className="text-xl font-bold text-green-400">
-                  {threatsBlocked}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
-                <Shield className="w-6 h-6 text-green-400" />
-              </div>
-            </div>
-          </InteractiveGlassCard>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <InteractiveGlassCard
-            className="p-6"
-            enableParticles={true}
-            enableTilt={true}
-            enableMagnetism={false}
-            enableBorderGlow={true}
-            clickEffect={true}
-            particleCount={8}
-            glowColor="132, 0, 255"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-gray-400 text-sm">Funds Protected</p>
-                <p className="text-xl font-bold text-neon-blue">
-                  ${fundsProtected.toFixed(2)}
-                </p>
-              </div>
-              <div className="w-12 h-12 bg-neon-blue/20 rounded-lg flex items-center justify-center">
-                <Zap className="w-6 h-6 text-neon-blue" />
-              </div>
-            </div>
-          </InteractiveGlassCard>
-        </motion.div>
-      </div>
-
       {/* Live Feed */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
       >
         <InteractiveGlassCard
           className="p-6"
@@ -168,26 +69,16 @@ export default function ThreatMonitor() {
               <h2 className="text-xl font-space-grotesk font-bold">
                 Live Mempool Monitor
               </h2>
-              {isMonitoring && (
-                <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-full animate-pulse">
-                  LIVE
-                </span>
-              )}
+              <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs font-bold rounded-full animate-pulse">
+                LIVE
+              </span>
             </div>
             <div className="text-sm text-gray-400">
               {recentTransactions.length} transactions
             </div>
           </div>
 
-          {!isMonitoring ? (
-            <div className="text-center py-12">
-              <Activity className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-bold mb-2">Monitoring Paused</h3>
-              <p className="text-gray-400">
-                Connect your wallet to start real-time threat monitoring
-              </p>
-            </div>
-          ) : recentTransactions.length === 0 ? (
+          {recentTransactions.length === 0 ? (
             <div className="text-center py-12">
               <Shield className="w-16 h-16 text-green-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold mb-2">All Clear</h3>

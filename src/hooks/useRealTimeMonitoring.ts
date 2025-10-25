@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { ethers } from "ethers";
-import { Alert, Token } from "@/types";
+import { Alert, Token, MempoolTransaction } from "@/types";
 import EnvioHyperSync, { MempoolAlert } from "@/lib/envio";
 import { RiskEngine, RiskScore } from "@/lib/risk-engine";
 import LitProtocolService from "@/lib/lit-protocol";
@@ -20,9 +20,36 @@ export interface RealTimeMonitoringState {
 export function useRealTimeMonitoring() {
   const { address, isConnected } = useAccount();
   const [state, setState] = useState<RealTimeMonitoringState>({
-    isMonitoring: false,
+    isMonitoring: true, // Always active
     alerts: [],
-    mempoolTransactions: [],
+    mempoolTransactions: [
+      // Mock transaction 1 - Token approval on Sepolia
+      {
+        hash: "0x8f3c2d1e4b5a6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d",
+        from: "0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb",
+        to: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", // USDC contract
+        value: "0x0",
+        gasPrice: "0xba43b7400", // 50 gwei
+        gasLimit: "0xc350", // 50000
+        data: "0x095ea7b3", // approve function
+        timestamp: new Date(Date.now() - 120000), // 2 minutes ago
+        riskLevel: "low",
+        threatType: undefined,
+      },
+      // Mock transaction 2 - ETH transfer on Sepolia
+      {
+        hash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+        from: "0x9876543210987654321098765432109876543210",
+        to: "0x1234567890123456789012345678901234567890",
+        value: "0x16345785d8a0000", // 0.1 ETH
+        gasPrice: "0x9502f9000", // 40 gwei
+        gasLimit: "0x5208", // 21000
+        data: "0x",
+        timestamp: new Date(Date.now() - 300000), // 5 minutes ago
+        riskLevel: "low",
+        threatType: undefined,
+      },
+    ],
     tokenRisks: new Map(),
     fundsProtected: 0,
     threatsBlocked: 2, // Demo starting value
@@ -70,10 +97,7 @@ export function useRealTimeMonitoring() {
         isMonitoring: true,
       }));
 
-      toast.success("🛡️ Real-time protection activated", {
-        icon: "✅",
-        duration: 3000,
-      });
+      // Monitoring is always active - no notification needed
 
       try {
         // Check if ethereum provider exists
@@ -193,7 +217,7 @@ export function useRealTimeMonitoring() {
       ...prev,
       isMonitoring: false,
     }));
-    toast("Monitoring stopped", { icon: "⏸️" });
+    // No notification for stopping since monitoring is always active
   }, []);
 
   /**
@@ -311,6 +335,16 @@ export function useRealTimeMonitoring() {
   }, []);
 
   /**
+   * Add transaction to mempool monitor
+   */
+  const addMempoolTransaction = useCallback((tx: MempoolTransaction) => {
+    setState((prev) => ({
+      ...prev,
+      mempoolTransactions: [tx, ...prev.mempoolTransactions].slice(0, 50),
+    }));
+  }, []);
+
+  /**
    * Request browser notification permission
    */
   const requestNotificationPermission = useCallback(async () => {
@@ -343,6 +377,7 @@ export function useRealTimeMonitoring() {
     clearAlerts,
     requestNotificationPermission,
     incrementDemoMetrics,
+    addMempoolTransaction,
   };
 }
 

@@ -158,18 +158,10 @@ export default function SecurityDashboard({ tokens }: SecurityDashboardProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-400 text-sm">Monitoring Status</p>
-                <p
-                  className={`text-xl font-bold ${isMonitoring ? "text-green-400" : "text-orange-400"}`}
-                >
-                  {isMonitoring ? "Active" : "Paused"}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">
-                  {isMonitoring ? "Click to stop" : "Click to start"}
-                </p>
+                <p className="text-xl font-bold text-green-400">Active</p>
+                <p className="text-xs text-gray-500 mt-1">24/7 Protection</p>
               </div>
-              <Activity
-                className={`w-8 h-8 ${isMonitoring ? "text-green-400" : "text-gray-400"}`}
-              />
+              <Activity className="w-8 h-8 text-green-400 animate-pulse" />
             </div>
           </InteractiveGlassCard>
         </motion.div>

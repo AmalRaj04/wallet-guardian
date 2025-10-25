@@ -31,8 +31,12 @@ export default function TokenAllowances({
   walletAddress,
 }: TokenAllowancesProps) {
   const { chain } = useAccount();
-  const { incrementDemoMetrics } = useRealTimeMonitoring();
+  const { incrementDemoMetrics, addMempoolTransaction } =
+    useRealTimeMonitoring();
   const [allowances, setAllowances] = useState<TokenAllowance[]>([]);
+  const [previousAllowances, setPreviousAllowances] = useState<Set<string>>(
+    new Set()
+  );
   const [loading, setLoading] = useState(false);
   const [revoking, setRevoking] = useState<string | null>(null);
   const [selectedAllowances, setSelectedAllowances] = useState<Set<string>>(
@@ -142,13 +146,38 @@ export default function TokenAllowances({
         }
       }
 
+      // Detect new approvals and add to mempool monitor
+      const currentApprovalKeys = new Set(
+        allAllowances.map((a) => `${a.token.address}-${a.spender}`)
+      );
+
+      allAllowances.forEach((allowance) => {
+        const key = `${allowance.token.address}-${allowance.spender}`;
+
+        // If this is a new approval (not in previous set)
+        if (!previousAllowances.has(key)) {
+          // Add to mempool monitor
+          addMempoolTransaction({
+            hash: "0x" + Math.random().toString(16).slice(2).padEnd(64, "0"),
+            from: walletAddress || "",
+            to: allowance.token.address,
+            value: "0x0",
+            gasPrice: "0x0",
+            gasLimit: "0x0",
+            data: "0x095ea7b3", // approve function signature
+            timestamp: new Date(),
+            riskLevel: allowance.isUnlimited ? "high" : "medium",
+            threatType: allowance.isUnlimited ? "suspicious" : undefined,
+          });
+        }
+      });
+
+      // Update previous allowances set
+      setPreviousAllowances(currentApprovalKeys);
+
       setAllowances(allAllowances);
 
-      if (allAllowances.length === 0) {
-        toast.success("No active approvals found");
-      } else {
-        toast.success(`Found ${allAllowances.length} active approvals`);
-      }
+      // No toast notification - just update the list silently
     } catch (error) {
       console.error("Error fetching allowances:", error);
       toast.error("Failed to fetch token allowances");
