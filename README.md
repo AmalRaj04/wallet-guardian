@@ -1,350 +1,547 @@
-# 🛡️ Wallet Guardian - 100% Complete Implementation
+# 🛡️ AuraGuard - AI-Powered Crypto Security Platform
 
-**The Most Comprehensive Web3 Security Platform**
+<div align="center">
 
-[![Status](https://img.shields.io/badge/Status-100%25%20Complete-success)](.)
-[![Features](https://img.shields.io/badge/Features-10%2F10-brightgreen)](.)
-[![Sponsors](https://img.shields.io/badge/Sponsors-6%2F6-blue)](.)
+![AuraGuard Logo](public/sponsors/logo.png)
+
+**Your Crypto's Aura Protected by Intelligence**
+
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)](https://tailwindcss.com/)
+
+[Report Bug](../../issues) • [Request Feature](../../issues)
+
+</div>
 
 ---
 
-## 🎉 **ALL 10 FEATURES FROM MASTER OVERVIEW - FULLY IMPLEMENTED**
+## 🌟 Overview
 
-Every single feature from your master overview has been implemented to **100% completion** with no shortcuts.
+**AuraGuard** is a comprehensive Web3 security platform that combines AI-powered threat detection with real-time portfolio management. Built for the modern crypto user, AuraGuard provides enterprise-grade security features with an intuitive, interactive interface.
 
-### ✅ 1. Real-Time Threat Detection (100%)
+### Why AuraGuard?
 
-- **Envio HyperSync** WebSocket integration
-- **Blockscout API** transaction monitoring
-- **Etherscan API** backup (NEW ✨)
-- Mempool monitoring with fallback
+- 🤖 **AI-Powered Analysis** - Intelligent risk assessment using Groq AI and Gemini
+- ⚡ **Real-Time Protection** - Instant threat detection and mempool monitoring
+- 🎨 **Interactive UI** - Beautiful glassmorphism design with MagicBento effects
+- 🔒 **Smart Contract Security** - Comprehensive bytecode analysis and verification
+- 📊 **Portfolio Management** - Track assets with color-coded risk indicators
+- 🔐 **Conditional Signing** - Lit Protocol integration for secure transactions
+
+---
+
+## ✨ Features
+
+### 🔍 Security & Threat Detection
+
+**Real-Time Monitoring**
+- Mempool transaction monitoring via Envio HyperSync
 - Sandwich attack detection
-- Flash loan detection
-- Rug pull detection
-- Creator dump alerts
-- Browser notifications
+- Flash loan vulnerability alerts
+- Rug pull pattern recognition
+- Creator dump warnings
+- Browser notifications for critical threats
 
-### ✅ 2. AI-Powered Security Analysis (100%)
-
-- **Groq AI** (llama-3.3-70b-versatile)
-- **Gemini API** backup
-- Risk Score (0-100)
-- Smart Recommendations (JSON)
-- Plain-English Insights
-- Confidence scoring
-
-### ✅ 3. Smart Contract Security (100%)
-
-- **Hardhat 3** bytecode analysis
-- **Blockscout** + **Etherscan** verification
-- 10+ vulnerability patterns
+**Smart Contract Analysis**
+- Bytecode analysis using Hardhat 3
+- Contract verification via Blockscout & Etherscan
 - Honeypot detection
+- Dangerous opcode identification
 - Security scoring (A-F grades)
-- Dangerous opcode detection
+- 10+ vulnerability pattern checks
 
-### ✅ 4. Portfolio Risk Management (100%)
+**AI-Powered Risk Assessment**
+- Groq AI (llama-3.3-70b-versatile) integration
+- Google Gemini API backup
+- Risk scores (0-100 scale)
+- Plain-English security insights
+- Smart recommendations with confidence scoring
 
-- **Blockscout SDK** token balances
-- **CoinGecko API** price data
-- Weighted risk calculation
-- Color-coded display (🟢🟡🟠🔴)
-- Interactive charts (Pie, Line)
+### 💼 Portfolio Management
 
-### ✅ 5. Token Allowance Management (100%)
+**Asset Tracking**
+- Real-time token balance monitoring
+- Multi-chain support (Ethereum, Sepolia)
+- CoinGecko price integration
+- Portfolio composition charts
+- Historical performance tracking
+- NFT collection display
 
-- **Ethers.js** integration
+**Risk Management**
+- Weighted risk calculation across portfolio
+- Color-coded risk indicators (🟢 Safe → 🔴 Critical)
+- Interactive risk timeline charts
+- Token-level risk analysis
+- Automated risk alerts
+
+### 🔐 Advanced Security Features
+
+**Token Allowance Management**
+- Scan all active token approvals
 - Unlimited approval detection
-- Revocation functionality
-- Risk-based alerts
+- One-click revocation
+- Risk-based warnings
+- Spender reputation tracking
 
-### ✅ 6. Trust & Verification System (100%)
-
-- **Avail Network** integration (NEW ✨)
-- Contract verification
-- Creator reputation tracking
-- Trust badges (✅ Verified, 🔒 Secure, 💎 Active, ⏰ Established)
-- Audit report storage
-
-### ✅ 7. Dashboard Interface (100%)
-
-- **React** + **Tailwind** + **WebSocket**
-- Real-time updates
-- Dark mode glassmorphism
-- Portfolio Pie chart
-- Risk Timeline chart
-- Active Threats Table
-- Mempool activity feed
-
-### ✅ 8. Conditional Transaction Safety (100%)
-
-- **Lit Protocol** integration
-- PKP generation with wallet auth
+**Conditional Transaction Safety**
+- Lit Protocol PKP integration
+- Risk-based transaction signing
 - Session signature management
-- Conditional signing based on risk
-- Lit Actions execution
-- Multi-step batch transactions
 - Emergency action execution
+- Multi-step batch transactions
 
-### ✅ 9. Comprehensive Data Integration (100%)
+**Trust & Verification**
+- Avail Network integration
+- Contract verification badges
+- Creator reputation system
+- Audit report storage
+- Trust score calculation
 
-- **PostgreSQL** database (NEW ✨)
-- **Redis** caching (5-min TTL)
-- **Express.js** backend API
-- Unified data aggregation
-- 8+ API endpoints
-- In-memory fallback
+### 🎨 User Experience
 
-### ✅ 10. Security Alerts & Notifications (100%)
+**Interactive Interface**
+- MagicBento card effects (particles, tilt, glow)
+- Glassmorphism design language
+- Dark mode optimized
+- Responsive mobile layout
+- Smooth GSAP animations
+- Real-time WebSocket updates
 
-- **WebSocket** server (ws://localhost:8080)
-- AI threat severity scoring
-- Browser notifications
-- Toast notifications
-- Auto-reconnection
-- Message queuing
-
----
-
-## 🏆 ALL 6 SPONSOR INTEGRATIONS (100%)
-
-| Sponsor             | Integration                       | Status  |
-| ------------------- | --------------------------------- | ------- |
-| **Groq AI**         | llama-3.3-70b security analysis   | ✅ 100% |
-| **Blockscout**      | Portfolio & contract verification | ✅ 100% |
-| **Envio HyperSync** | Real-time mempool monitoring      | ✅ 100% |
-| **Lit Protocol**    | Conditional signing & PKP         | ✅ 100% |
-| **PYUSD**           | Safe asset migration              | ✅ 100% |
-| **Hardhat 3**       | Bytecode analysis                 | ✅ 100% |
+**Three Core Modules**
+1. **Portfolio** - Asset tracking and management
+2. **Security** - Threat monitoring and analysis
+3. **Explore** - Market discovery and research
 
 ---
 
-## 🚀 Quick Start
+## 🏗️ Architecture
 
+### Tech Stack
+
+**Frontend**
+```
+Next.js 15 (App Router)
+React 19
+TypeScript 5
+Tailwind CSS 3
+Framer Motion
+GSAP Animations
+```
+
+**Blockchain**
+```
+Wagmi + Viem
+RainbowKit
+Ethers.js v5
+Hardhat 3
+Lit Protocol SDK
+```
+
+**Backend & APIs**
+```
+Express.js API Server
+WebSocket Server (ws://)
+PostgreSQL Database
+Redis Caching
+```
+
+**Integrations**
+```
+Groq AI (llama-3.3-70b)
+Google Gemini
+Blockscout API & SDK
+Envio HyperSync
+Etherscan API
+CoinGecko API
+Alchemy SDK
+Avail Network
+```
+
+### System Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Frontend (Next.js)                    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │Portfolio │  │ Security │  │ Explore  │              │
+│  └──────────┘  └──────────┘  └──────────┘              │
+└─────────────────────────────────────────────────────────┘
+                          │
+                          ▼
+┌─────────────────────────────────────────────────────────┐
+│              Backend API (Express.js)                    │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │   REST   │  │WebSocket │  │  Cache   │              │
+│  └──────────┘  └──────────┘  └──────────┘              │
+└─────────────────────────────────────────────────────────┘
+                          │
+        ┌─────────────────┼─────────────────┐
+        ▼                 ▼                 ▼
+┌──────────────┐  ┌──────────────┐  ┌──────────────┐
+│  Blockchain  │  │   AI APIs    │  │   Database   │
+│              │  │              │  │              │
+│ • Blockscout │  │ • Groq AI    │  │ • PostgreSQL │
+│ • Envio      │  │ • Gemini     │  │ • Redis      │
+│ • Etherscan  │  │              │  │              │
+│ • Lit        │  │              │  │              │
+│ • Avail      │  │              │  │              │
+└──────────────┘  └──────────────┘  └──────────────┘
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- PostgreSQL (optional, has in-memory fallback)
+- Redis (optional, has in-memory fallback)
+- Web3 wallet (MetaMask, WalletConnect, etc.)
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-# 1. Install dependencies
+git clone https://github.com/yourusername/auraguard.git
+cd auraguard
+```
+
+2. **Install dependencies**
+```bash
 npm install
-npm install pg @types/pg  # PostgreSQL client
+```
 
-# 2. Configure environment (already done in .env.local)
-# All API keys are configured
+3. **Configure environment variables**
 
-# 3. Start all services
+Create a `.env.local` file in the root directory:
+
+```env
+# Required
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+
+# Optional (for full functionality)
+GROQ_API_KEY=your_groq_key
+GEMINI_API_KEY=your_gemini_key
+NEXT_PUBLIC_BLOCKSCOUT_API_URL=https://eth-sepolia.blockscout.com/api/v2
+ETHERSCAN_API_KEY=your_etherscan_key
+ALCHEMY_API_KEY=your_alchemy_key
+
+# Database (optional)
+DATABASE_URL=postgresql://user:password@localhost:5432/auraguard
+REDIS_URL=redis://localhost:6379
+```
+
+4. **Start the development server**
+```bash
+# Frontend only
+npm run dev
+
+# All services (frontend + backend + WebSocket)
 npm run dev:all
 ```
 
-**Services will start:**
-
-- ✅ Frontend: http://localhost:3000
-- ✅ Backend API: http://localhost:3001
-- ✅ WebSocket: ws://localhost:8080
-- ✅ PostgreSQL: (via DATABASE_URL)
-- ✅ Redis: (optional, in-memory fallback)
-
----
-
-## 📊 Tech Stack (Exactly as Specified)
-
+5. **Open your browser**
 ```
-Frontend (React + Wagmi + Tailwind)
-│
-▼
-Backend (Node.js + Express)
-│
-┌────┼──────────────────────────────────────────┐
-│ Blockscout │ Envio │ Avail │ CoinGecko │ Lit │ Groq │ Gemini │ Etherscan │
-└────┴────────┴───────┴────────┴──────────┴─────┴────────┘
-│
-▼
-PostgreSQL (Cache, logs, alerts)
+http://localhost:3000
 ```
 
-**✅ EXACTLY AS YOUR MASTER OVERVIEW SPECIFIED!**
-
----
-
-## 🆕 New Files Created (20+)
-
-### Backend Infrastructure
-
-- `src/server/backend-api.ts` - Express API server
-- `src/server/websocket.ts` - WebSocket server
-- `src/server/websocket-standalone.ts` - Standalone WS
-- `src/server/redis-cache.ts` - Redis caching
-- `src/server/api-integration.ts` - Data integration
-- `src/server/database.ts` - **PostgreSQL integration** ✨
-
-### Blockchain Integrations
-
-- `src/lib/etherscan.ts` - **Complete Etherscan API** ✨
-- `src/lib/avail.ts` - Avail Network integration
-- `src/lib/lit-protocol-enhanced.ts` - Full Lit Protocol
-
-### Frontend Components
-
-- `src/components/dashboard/ComprehensiveDashboard.tsx` - Full dashboard
-- `src/hooks/useWebSocket.ts` - WebSocket hook
-
-### Documentation (10+ files)
-
-- `FINAL_100_PERCENT_COMPLETE.md` - Completion report
-- `COMPLETE_IMPLEMENTATION_100.md` - Feature documentation
-- `QUICK_START_100.md` - Setup guide
-- `README_FINAL.md` - Project overview
-- `IMPLEMENTATION_CHECKLIST.md` - Feature checklist
-- `START_HERE_FINAL.md` - Quick start
-- `PROJECT_STATUS.md` - Status summary
-- And more...
-
----
-
-## 📈 Final Statistics
-
-- **Total Features**: 10/10 (100%) ✅
-- **Sponsor Integrations**: 6/6 (100%) ✅
-- **TypeScript Files**: 92+
-- **New Files Created**: 20+
-- **Lines of Code**: 6000+
-- **API Endpoints**: 8+
-- **Database Tables**: 5
-- **Documentation Files**: 35+
-
----
-
-## 🎯 What's Included
-
-### Frontend
-
-- ✅ Next.js 15 (App Router)
-- ✅ React 19
-- ✅ TypeScript 5
-- ✅ Tailwind CSS 3
-- ✅ Wagmi + Viem
-- ✅ RainbowKit
-- ✅ Chart.js + Recharts
-- ✅ Framer Motion
-
-### Backend
-
-- ✅ Express.js API
-- ✅ WebSocket Server
-- ✅ PostgreSQL Database
-- ✅ Redis Caching
-- ✅ In-memory Fallback
-- ✅ Rate Limiting
-- ✅ CORS Protection
-
-### Blockchain
-
-- ✅ Ethers.js v5
-- ✅ Hardhat 3
-- ✅ Lit Protocol SDK
-- ✅ Envio HyperSync
-- ✅ Blockscout SDK
-- ✅ Alchemy SDK
-- ✅ Etherscan API
-
-### AI/ML
-
-- ✅ Groq SDK (llama-3.3-70b)
-- ✅ Google Gemini
-
----
-
-## 🔧 Available Commands
+### Quick Start Commands
 
 ```bash
 # Development
 npm run dev              # Frontend only
 npm run dev:backend      # Backend API only
 npm run dev:ws           # WebSocket only
-npm run dev:all          # All services ⭐
+npm run dev:all          # All services (recommended)
 
 # Production
-npm run build            # Build frontend
-npm start                # Start production
+npm run build            # Build for production
+npm start                # Start production server
 
 # Utilities
-npm run type-check       # TypeScript check
-npm run lint             # ESLint
-npm run redis:start      # Start Redis (optional)
-npm run redis:stop       # Stop Redis
+npm run type-check       # TypeScript validation
+npm run lint             # Code linting
 ```
 
 ---
 
-## 📚 Documentation
+## 📖 Usage Guide
 
-| File                               | Purpose           |
-| ---------------------------------- | ----------------- |
-| **START_HERE_FINAL.md**            | 👈 Start here!    |
-| **FINAL_100_PERCENT_COMPLETE.md**  | Completion report |
-| **QUICK_START_100.md**             | Detailed setup    |
-| **COMPLETE_IMPLEMENTATION_100.md** | All features      |
-| **IMPLEMENTATION_CHECKLIST.md**    | Feature checklist |
-| **PROJECT_STATUS.md**              | Visual summary    |
+### Connecting Your Wallet
+
+1. Click "Connect Wallet" in the header
+2. Select your preferred wallet provider
+3. Approve the connection request
+4. Choose Ethereum Mainnet or Sepolia testnet
+
+### Monitoring Your Portfolio
+
+1. Navigate to the **Portfolio** module
+2. View your total portfolio value and 24h change
+3. Check individual token balances and prices
+4. Review the risk score for your holdings
+5. Set up price alerts for specific tokens
+
+### Security Analysis
+
+1. Go to the **Security** module
+2. View your overall security score
+3. Check active threats in real-time
+4. Review token allowances and revoke suspicious ones
+5. Analyze smart contracts before interacting
+
+### Exploring Tokens
+
+1. Open the **Explore** module
+2. Browse trending coins and top performers
+3. Search for specific tokens
+4. View detailed token information
+5. Check security scores before investing
+
+---
+
+## 🎨 Interactive Features
+
+### MagicBento Effects
+
+AuraGuard features interactive card animations powered by GSAP:
+
+- **✨ Particles** - Floating particles on hover
+- **🌟 Border Glow** - Dynamic glowing borders
+- **🎯 3D Tilt** - Subtle 3D perspective effects
+- **💥 Click Ripple** - Satisfying click animations
+- **🎨 Purple Gradient** - Signature AuraGuard colors
+
+### Customization
+
+Effects can be customized per component:
+```typescript
+<InteractiveGlassCard
+  enableParticles={true}
+  enableTilt={true}
+  enableBorderGlow={true}
+  clickEffect={true}
+  particleCount={12}
+  tiltIntensity={0.3}
+  glowColor="132, 0, 255"
+/>
+```
+
+---
+
+## 🔧 Configuration
+
+### Supported Networks
+
+- Ethereum Mainnet (Chain ID: 1)
+- Sepolia Testnet (Chain ID: 11155111)
+
+### API Rate Limits
+
+- Blockscout: 5 requests/second
+- CoinGecko: 10-50 calls/minute (free tier)
+- Etherscan: 5 calls/second (free tier)
+- Groq AI: 30 requests/minute
+
+### Caching Strategy
+
+- Token prices: 5 minutes
+- Contract data: 1 hour
+- Risk scores: 15 minutes
+- Portfolio data: 30 seconds
+
+---
+
+## 🛠️ Development
+
+### Project Structure
+
+```
+auraguard/
+├── src/
+│   ├── app/                    # Next.js app router
+│   │   ├── api/               # API routes
+│   │   ├── dashboard/         # Dashboard page
+│   │   └── layout.tsx         # Root layout
+│   ├── components/            # React components
+│   │   ├── ui/               # UI components
+│   │   └── Header.tsx        # Navigation
+│   ├── modules/              # Feature modules
+│   │   ├── portfolio/        # Portfolio module
+│   │   ├── security/         # Security module
+│   │   └── explore/          # Explore module
+│   ├── hooks/                # Custom React hooks
+│   ├── lib/                  # Utilities & integrations
+│   ├── server/               # Backend services
+│   └── types/                # TypeScript types
+├── public/                   # Static assets
+└── package.json
+```
+
+### Adding New Features
+
+1. Create component in appropriate module
+2. Add types to `src/types/index.ts`
+3. Implement business logic in `src/lib/`
+4. Add API endpoint if needed in `src/app/api/`
+5. Update documentation
+
+### Code Style
+
+- TypeScript strict mode enabled
+- ESLint + Prettier configured
+- Tailwind CSS for styling
+- Component-first architecture
+- Custom hooks for logic reuse
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how you can help:
+
+### Reporting Bugs
+
+1. Check if the bug is already reported in [Issues](../../issues)
+2. Create a new issue with:
+   - Clear title and description
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Screenshots if applicable
+   - Environment details
+
+### Suggesting Features
+
+1. Open a new [Feature Request](../../issues/new)
+2. Describe the feature and its benefits
+3. Provide use cases and examples
+4. Discuss implementation approach
+
+### Pull Requests
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Make your changes
+4. Test thoroughly
+5. Commit with clear messages (`git commit -m 'Add amazing feature'`)
+6. Push to your fork (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+### Development Guidelines
+
+- Follow existing code style
+- Add TypeScript types for new code
+- Write clear commit messages
+- Update documentation
+- Test on multiple browsers
+- Ensure mobile responsiveness
+
+---
+
+## 📊 Sponsor Integrations
+
+AuraGuard is powered by industry-leading Web3 infrastructure:
+
+| Sponsor | Integration | Purpose |
+|---------|-------------|---------|
+| **Groq AI** | llama-3.3-70b-versatile | AI-powered security analysis |
+| **Blockscout** | API & SDK | Portfolio tracking & verification |
+| **Envio HyperSync** | WebSocket | Real-time mempool monitoring |
+| **Lit Protocol** | PKP & Actions | Conditional transaction signing |
+| **PYUSD** | Stablecoin | Safe asset migration |
+| **Hardhat** | v3 | Smart contract bytecode analysis |
 
 ---
 
 ## 🔒 Security
 
-- ✅ No private keys stored
+### Best Practices
+
+- ✅ No private keys stored locally
 - ✅ All transactions require user confirmation
 - ✅ HTTPS/WSS only in production
 - ✅ Input validation on all endpoints
 - ✅ CORS protection enabled
 - ✅ Rate limiting configured
-- ✅ PostgreSQL for secure data storage
+- ✅ Secure database connections
+
+### Reporting Security Issues
+
+If you discover a security vulnerability, please email security@auraguard.io instead of using the issue tracker.
 
 ---
 
-## 🎉 **MISSION ACCOMPLISHED**
+## 📄 License
 
-**Every single feature from your master overview has been implemented to 100%!**
-
-- ✅ All 10 core features complete
-- ✅ All 6 sponsor integrations working
-- ✅ PostgreSQL database layer added
-- ✅ Etherscan API backup implemented
-- ✅ Avail Network fully integrated
-- ✅ Complete documentation (35+ files)
-- ✅ Production-ready infrastructure
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🚀 Next Steps
+## 🙏 Acknowledgments
 
-1. **Start the app**: `npm run dev:all`
-2. **Connect wallet**: Open http://localhost:3000
-3. **Explore features**: Dashboard, Security, Portfolio
-4. **Test integrations**: All 6 sponsors working
-5. **Deploy**: Ready for production
-
----
-
-```
-╔═══════════════════════════════════════════════════════════════╗
-║                                                               ║
-║   🎉 100% COMPLETE - ALL FEATURES IMPLEMENTED! 🎉            ║
-║                                                               ║
-║   ✅ 10/10 Features                                           ║
-║   ✅ 6/6 Sponsor Integrations                                 ║
-║   ✅ PostgreSQL Database                                      ║
-║   ✅ Etherscan API Backup                                     ║
-║   ✅ Avail Network Integration                                ║
-║   ✅ Production Ready                                         ║
-║                                                               ║
-║   Run: npm run dev:all                                        ║
-║   Open: http://localhost:3000                                 ║
-║                                                               ║
-║   🚀 YOUR WALLET GUARDIAN IS READY! 🚀                       ║
-║                                                               ║
-╚═══════════════════════════════════════════════════════════════╝
-```
+- **Groq** for lightning-fast AI inference
+- **Blockscout** for comprehensive blockchain data
+- **Envio** for real-time indexing
+- **Lit Protocol** for decentralized key management
+- **Hardhat** for smart contract tooling
+- **PYUSD** for stablecoin infrastructure
 
 ---
 
-**Status**: ✅ 100% Complete  
-**Version**: 1.0.0  
-**Production Ready**: YES ✅
+## 📞 Support
 
-**Protect the Web3 ecosystem with Wallet Guardian! 🛡️**
+- **Documentation**: [Read the docs](#features)
+- **Issues**: [GitHub Issues](../../issues)
+- **Discussions**: [GitHub Discussions](../../discussions)
+- **Twitter**: [@AuraGuard](#)
+- **Discord**: [Join our community](#)
+
+---
+
+## 🗺️ Roadmap
+
+### Q1 2025
+- [ ] Multi-chain support (Polygon, Arbitrum, Optimism)
+- [ ] Mobile app (React Native)
+- [ ] Advanced portfolio analytics
+- [ ] Social trading features
+
+### Q2 2025
+- [ ] DeFi protocol integration
+- [ ] Automated trading strategies
+- [ ] Enhanced AI models
+- [ ] Community governance
+
+### Q3 2025
+- [ ] Cross-chain bridge monitoring
+- [ ] NFT security analysis
+- [ ] Institutional features
+- [ ] API for developers
+
+---
+
+<div align="center">
+
+**Built with ❤️ by the AuraGuard Team**
+
+[Website](#) • [Twitter](#) • [Discord](#) • [GitHub](../../)
+
+⭐ Star us on GitHub — it helps!
+
+</div>
+
+---
+
+## 📈 Stats
+
+![GitHub stars](https://img.shields.io/github/stars/yourusername/auraguard?style=social)
+![GitHub forks](https://img.shields.io/github/forks/yourusername/auraguard?style=social)
+![GitHub issues](https://img.shields.io/github/issues/yourusername/auraguard)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/auraguard)
+
+---
+
+**Protect your crypto assets with intelligence. Welcome to AuraGuard.** 🛡️✨
