@@ -447,7 +447,6 @@ AuraGuard is powered by industry-leading Web3 infrastructure:
 
 | Sponsor | Integration | Purpose |
 |---------|-------------|---------|
-| **Groq AI** | llama-3.3-70b-versatile | AI-powered security analysis |
 | **Blockscout** | API & SDK | Portfolio tracking & verification |
 | **Envio HyperSync** | WebSocket | Real-time mempool monitoring |
 | **Lit Protocol** | PKP & Actions | Conditional transaction signing |
@@ -482,7 +481,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Groq** for lightning-fast AI inference
 - **Blockscout** for comprehensive blockchain data
 - **Envio** for real-time indexing
 - **Lit Protocol** for decentralized key management
